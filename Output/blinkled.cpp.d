@@ -1,5 +1,5 @@
-C:\Users\admin\Desktop\build_arduino\Output\blinkled.cpp.o: \
- C:\Users\admin\Desktop\build_arduino\blinkled.cpp \
+C:\Users\admin\Desktop\arduino_build\Output\blinkled.cpp.o: \
+ C:\Users\admin\Desktop\arduino_build\blinkled.cpp \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \
@@ -11,5 +11,5 @@ C:\Users\admin\Desktop\build_arduino\Output\blinkled.cpp.o: \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
- C:\Users\admin\Desktop\build_arduino\Libraries/SoftwareSerial.h \
+ C:\Users\admin\Desktop\arduino_build\Libraries/SoftwareSerial.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Stream.h

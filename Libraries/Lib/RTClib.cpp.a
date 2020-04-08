@@ -1,5 +1,5 @@
 !<arch>
-RTClib.cpp.o/   1586337389  0     0     100666  428252    `
+RTClib.cpp.o/   1586338150  0     0     100666  428252    `
 # 1 "C:\\Users\\admin\\Documents\\Arduino\\libraries\\RTClib-master\\RTClib.cpp"
 # 1 "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\avr\\bin//"
 # 1 "<built-in>"
@@ -51,7 +51,7 @@ RTClib.cpp.o/   1586337389  0     0     100666  428252    `
 
 
 
-# 1 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/Wire.h" 1
+# 1 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/Wire.h" 1
 /*
   TwoWire.h - TWI/I2C library for Arduino & Wiring
   Copyright (c) 2006 Nicholas Zambetti.  All right reserved.
@@ -1071,7 +1071,7 @@ typedef uint32_t uint_farptr_t;
 
 
 /*@}*/
-# 26 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/Wire.h" 2
+# 26 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/Wire.h" 2
 # 1 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino/Stream.h" 1
 
 # 1 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino/Stream.h"
@@ -6535,7 +6535,7 @@ class Stream : public Print
   // Returns index of the target that is found first or -1 if timeout occurs.
   int findMulti(struct MultiTarget *targets, int tCount);
 };
-# 27 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/Wire.h" 2
+# 27 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/Wire.h" 2
 
 
 

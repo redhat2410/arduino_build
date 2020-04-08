@@ -1,7 +1,7 @@
 !<arch>
 //                                              20        `
 FIMU_ADXL345.cpp.o/
-/0              1586337388  0     0     100666  389819    `
+/0              1586338149  0     0     100666  389819    `
 # 1 "C:\\Users\\admin\\Documents\\Arduino\\libraries\\FreeSixIMU-master\\FIMU_ADXL345.cpp"
 # 1 "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\avr\\bin//"
 # 1 "<built-in>"
@@ -9346,7 +9346,7 @@ private:
 };
 void print_byte(byte val);
 # 17 "C:\\Users\\admin\\Documents\\Arduino\\libraries\\FreeSixIMU-master\\FIMU_ADXL345.cpp" 2
-# 1 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/Wire.h" 1
+# 1 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/Wire.h" 1
 /*
   TwoWire.h - TWI/I2C library for Arduino & Wiring
   Copyright (c) 2006 Nicholas Zambetti.  All right reserved.
@@ -9406,7 +9406,7 @@ void print_byte(byte val);
   POSSIBILITY OF SUCH DAMAGE. */
 
 /* $Id$ */
-# 26 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/Wire.h" 2
+# 26 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/Wire.h" 2
 # 1 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino/Stream.h" 1
 
 # 1 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino/Stream.h"
@@ -9430,7 +9430,7 @@ void print_byte(byte val);
 
   parsing functions based on TextFinder library by Michael Margolis
 */
-# 27 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/Wire.h" 2
+# 27 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/Wire.h" 2
 
 
 

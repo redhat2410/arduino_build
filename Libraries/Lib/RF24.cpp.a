@@ -1,5 +1,5 @@
 !<arch>
-RF24.cpp.o/     1586337389  0     0     100666  488552    `
+RF24.cpp.o/     1586338150  0     0     100666  488552    `
 # 1 "C:\\Users\\admin\\Documents\\Arduino\\libraries\\RF24\\RF24.cpp"
 # 1 "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\avr\\bin//"
 # 1 "<built-in>"
@@ -9281,7 +9281,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 # 21 "C:\\Users\\admin\\Documents\\Arduino\\libraries\\RF24\\RF24_config.h"
 // Stuff that is normally provided by Arduino
 
-# 1 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 1
+# 1 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 1
 /*
  * Copyright (c) 2010 by Cristian Maglie <c.maglie@arduino.cc>
  * Copyright (c) 2014 by Paul Stoffregen <paul@pjrc.com> (Transaction API)
@@ -9317,7 +9317,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-# 18 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 2
+# 18 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 2
 
 // SPI_HAS_TRANSACTION means SPI has beginTransaction(), endTransaction(),
 // usingInterrupt(), and SPISetting(clock, bitOrder, dataMode)
@@ -9338,9 +9338,9 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // each SPI.beginTransaction().  Connect an LED to this pin.  The LED will turn
 // on if any mismatch is ever detected.
 //#define SPI_TRANSACTION_MISMATCH_LED 5
-# 63 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 63 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
 // define SPI_AVR_EIMSK for AVR boards with external interrupt pins
-# 72 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 72 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
 class SPISettings {
 public:
   SPISettings(uint32_t clock, uint8_t bitOrder, uint8_t dataMode) {
@@ -9416,17 +9416,17 @@ private:
 
     // Pack into the SPISettings class
     spcr = 
-# 146 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 146 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
           (1 << (6)) 
-# 146 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 146 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                    | 
-# 146 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 146 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                      (1 << (4)) 
-# 146 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 146 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                                | ((bitOrder == 0) ? 
-# 146 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 146 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                                                            (1 << (5)) 
-# 146 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 146 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                                                                      : 0) |
       (dataMode & 0x0C /* CPOL = bit 3, CPHA = bit 2 on SPCR*/) | ((clockDiv >> 1) & 0x03 /* SPR1 = bit 1, SPR0 = bit 0 on SPCR*/);
     spsr = clockDiv & 0x01 /* SPI2X = bit 0 on SPSR*/;
@@ -9462,32 +9462,32 @@ public:
   inline static void beginTransaction(SPISettings settings) {
     if (interruptMode > 0) {
       uint8_t sreg = 
-# 180 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 180 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                     (*(volatile uint8_t *)((0x3F) + 0x20))
-# 180 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 180 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                         ;
       
-# 181 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 181 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
      __asm__ __volatile__ ("cli" ::: "memory")
-# 181 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 181 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                    ;
 
 
       if (interruptMode == 1) {
         interruptSave = 
-# 185 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 185 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                        (*(volatile uint8_t *)((0x1D) + 0x20))
-# 185 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 185 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                                     ;
         
-# 186 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 186 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
        (*(volatile uint8_t *)((0x1D) + 0x20)) 
-# 186 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 186 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                      &= ~interruptMask;
         
-# 187 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 187 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
        (*(volatile uint8_t *)((0x3F) + 0x20)) 
-# 187 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 187 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
             = sreg;
       } else
 
@@ -9495,25 +9495,25 @@ public:
         interruptSave = sreg;
       }
     }
-# 203 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 203 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
     
-# 203 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 203 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
    (*(volatile uint8_t *)((0x2C) + 0x20)) 
-# 203 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 203 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
         = settings.spcr;
     
-# 204 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 204 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
    (*(volatile uint8_t *)((0x2D) + 0x20)) 
-# 204 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 204 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
         = settings.spsr;
   }
 
   // Write to the SPI bus (MOSI pin) and also receive (MISO pin)
   inline static uint8_t transfer(uint8_t data) {
     
-# 209 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 209 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
    (*(volatile uint8_t *)((0x2E) + 0x20)) 
-# 209 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 209 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
         = data;
     /*
      * The following NOP introduces a small delay that can prevent the wait
@@ -9523,112 +9523,112 @@ public:
      */
     asm volatile("nop");
     while (!(
-# 217 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 217 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
             (*(volatile uint8_t *)((0x2D) + 0x20)) 
-# 217 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 217 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                  & 
-# 217 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 217 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                    (1 << (7))
-# 217 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 217 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                             )) ; // wait
     return 
-# 218 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 218 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
           (*(volatile uint8_t *)((0x2E) + 0x20))
-# 218 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 218 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
               ;
   }
   inline static uint16_t transfer16(uint16_t data) {
     union { uint16_t val; struct { uint8_t lsb; uint8_t msb; }; } in, out;
     in.val = data;
     if (!(
-# 223 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 223 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
          (*(volatile uint8_t *)((0x2C) + 0x20)) 
-# 223 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 223 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
               & 
-# 223 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 223 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                 (1 << (5))
-# 223 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 223 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                          )) {
       
-# 224 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 224 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
      (*(volatile uint8_t *)((0x2E) + 0x20)) 
-# 224 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 224 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
           = in.msb;
       asm volatile("nop"); // See transfer(uint8_t) function
       while (!(
-# 226 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 226 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
               (*(volatile uint8_t *)((0x2D) + 0x20)) 
-# 226 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 226 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                    & 
-# 226 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 226 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                      (1 << (7))
-# 226 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 226 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                               )) ;
       out.msb = 
-# 227 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 227 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                (*(volatile uint8_t *)((0x2E) + 0x20))
-# 227 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 227 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                    ;
       
-# 228 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 228 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
      (*(volatile uint8_t *)((0x2E) + 0x20)) 
-# 228 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 228 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
           = in.lsb;
       asm volatile("nop");
       while (!(
-# 230 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 230 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
               (*(volatile uint8_t *)((0x2D) + 0x20)) 
-# 230 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 230 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                    & 
-# 230 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 230 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                      (1 << (7))
-# 230 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 230 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                               )) ;
       out.lsb = 
-# 231 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 231 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                (*(volatile uint8_t *)((0x2E) + 0x20))
-# 231 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 231 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                    ;
     } else {
       
-# 233 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 233 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
      (*(volatile uint8_t *)((0x2E) + 0x20)) 
-# 233 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 233 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
           = in.lsb;
       asm volatile("nop");
       while (!(
-# 235 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 235 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
               (*(volatile uint8_t *)((0x2D) + 0x20)) 
-# 235 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 235 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                    & 
-# 235 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 235 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                      (1 << (7))
-# 235 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 235 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                               )) ;
       out.lsb = 
-# 236 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 236 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                (*(volatile uint8_t *)((0x2E) + 0x20))
-# 236 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 236 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                    ;
       
-# 237 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 237 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
      (*(volatile uint8_t *)((0x2E) + 0x20)) 
-# 237 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 237 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
           = in.msb;
       asm volatile("nop");
       while (!(
-# 239 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 239 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
               (*(volatile uint8_t *)((0x2D) + 0x20)) 
-# 239 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 239 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                    & 
-# 239 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 239 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                      (1 << (7))
-# 239 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 239 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                               )) ;
       out.msb = 
-# 240 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 240 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                (*(volatile uint8_t *)((0x2E) + 0x20))
-# 240 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 240 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                    ;
     }
     return out.val;
@@ -9637,84 +9637,84 @@ public:
     if (count == 0) return;
     uint8_t *p = (uint8_t *)buf;
     
-# 247 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 247 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
    (*(volatile uint8_t *)((0x2E) + 0x20)) 
-# 247 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 247 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
         = *p;
     while (--count > 0) {
       uint8_t out = *(p + 1);
       while (!(
-# 250 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 250 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
               (*(volatile uint8_t *)((0x2D) + 0x20)) 
-# 250 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 250 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                    & 
-# 250 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 250 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                      (1 << (7))
-# 250 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 250 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                               )) ;
       uint8_t in = 
-# 251 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 251 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                   (*(volatile uint8_t *)((0x2E) + 0x20))
-# 251 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 251 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                       ;
       
-# 252 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 252 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
      (*(volatile uint8_t *)((0x2E) + 0x20)) 
-# 252 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 252 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
           = out;
       *p++ = in;
     }
     while (!(
-# 255 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 255 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
             (*(volatile uint8_t *)((0x2D) + 0x20)) 
-# 255 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 255 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                  & 
-# 255 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 255 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                    (1 << (7))
-# 255 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 255 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                             )) ;
     *p = 
-# 256 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 256 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
         (*(volatile uint8_t *)((0x2E) + 0x20))
-# 256 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 256 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
             ;
   }
   // After performing a group of transfers and releasing the chip select
   // signal, this function allows others to access the SPI bus
   inline static void endTransaction(void) {
-# 269 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 269 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
     if (interruptMode > 0) {
 
       uint8_t sreg = 
-# 271 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 271 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                     (*(volatile uint8_t *)((0x3F) + 0x20))
-# 271 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 271 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                         ;
 
       
-# 273 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 273 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
      __asm__ __volatile__ ("cli" ::: "memory")
-# 273 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 273 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                    ;
 
       if (interruptMode == 1) {
         
-# 276 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 276 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
        (*(volatile uint8_t *)((0x1D) + 0x20)) 
-# 276 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 276 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                      = interruptSave;
         
-# 277 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 277 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
        (*(volatile uint8_t *)((0x3F) + 0x20)) 
-# 277 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 277 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
             = sreg;
       } else
 
       {
         
-# 281 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 281 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
        (*(volatile uint8_t *)((0x3F) + 0x20)) 
-# 281 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 281 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
             = interruptSave;
       }
     }
@@ -9727,79 +9727,79 @@ public:
   // beginTransaction() to configure SPI settings.
   inline static void setBitOrder(uint8_t bitOrder) {
     if (bitOrder == 0) 
-# 292 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 292 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                              (*(volatile uint8_t *)((0x2C) + 0x20)) 
-# 292 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 292 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                                   |= 
-# 292 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 292 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                                      (1 << (5))
-# 292 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 292 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                                               ;
     else 
-# 293 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 293 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
         (*(volatile uint8_t *)((0x2C) + 0x20)) 
-# 293 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 293 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
              &= ~(
-# 293 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 293 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                   (1 << (5))
-# 293 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 293 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                            );
   }
   // This function is deprecated.  New applications should use
   // beginTransaction() to configure SPI settings.
   inline static void setDataMode(uint8_t dataMode) {
     
-# 298 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 298 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
    (*(volatile uint8_t *)((0x2C) + 0x20)) 
-# 298 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 298 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
         = (
-# 298 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 298 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
            (*(volatile uint8_t *)((0x2C) + 0x20)) 
-# 298 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 298 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                 & ~0x0C /* CPOL = bit 3, CPHA = bit 2 on SPCR*/) | dataMode;
   }
   // This function is deprecated.  New applications should use
   // beginTransaction() to configure SPI settings.
   inline static void setClockDivider(uint8_t clockDiv) {
     
-# 303 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 303 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
    (*(volatile uint8_t *)((0x2C) + 0x20)) 
-# 303 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 303 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
         = (
-# 303 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 303 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
            (*(volatile uint8_t *)((0x2C) + 0x20)) 
-# 303 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 303 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                 & ~0x03 /* SPR1 = bit 1, SPR0 = bit 0 on SPCR*/) | (clockDiv & 0x03 /* SPR1 = bit 1, SPR0 = bit 0 on SPCR*/);
     
-# 304 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 304 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
    (*(volatile uint8_t *)((0x2D) + 0x20)) 
-# 304 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 304 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
         = (
-# 304 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 304 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
            (*(volatile uint8_t *)((0x2D) + 0x20)) 
-# 304 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 304 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                 & ~0x01 /* SPI2X = bit 0 on SPSR*/) | ((clockDiv >> 2) & 0x01 /* SPI2X = bit 0 on SPSR*/);
   }
   // These undocumented functions should not be used.  SPI.transfer()
   // polls the hardware flag which is automatically cleared as the
   // AVR responds to SPI's interrupt
   inline static void attachInterrupt() { 
-# 309 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 309 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                                         (*(volatile uint8_t *)((0x2C) + 0x20)) 
-# 309 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 309 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                                              |= 
-# 309 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 309 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                                                 (1 << (7))
-# 309 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 309 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                                                          ; }
   inline static void detachInterrupt() { 
-# 310 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 310 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                                         (*(volatile uint8_t *)((0x2C) + 0x20)) 
-# 310 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 310 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                                              &= ~
-# 310 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h" 3
+# 310 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h" 3
                                                  (1 << (7))
-# 310 "C:\\Users\\admin\\Desktop\\build_arduino\\Libraries/SPI.h"
+# 310 "C:\\Users\\admin\\Desktop\\arduino_build\\Libraries/SPI.h"
                                                           ; }
 
 private:

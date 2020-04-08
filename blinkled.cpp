@@ -10,6 +10,6 @@ void setup(){
 }
 
 void loop(){
-    mySerial.println("Hello");
+    mySerial.println("Hello Builder");
     delay(1000);
 }
