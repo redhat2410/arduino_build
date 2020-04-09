@@ -173,10 +173,10 @@ for %%f in (%_pathBuildLibModule%\*.a) do (
     set _linkPathStatic="%%f" !_linkPathStatic!
 )
 
-for %%f in (%_pathBuildLibModule%\*.o) do (
-    del %%f
-    echo Removed %%f
-)
+::for %%f in (%_pathBuildLibModule%\*.o) do (
+::    del %%f
+::    echo Removed %%f
+::)
 
 ::thực hiện copy file .h vào thư mục build
 for /d %%f in (%_pathLibraries%\*) do (
@@ -226,7 +226,7 @@ set exec_sketch=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exce
 
 ::build file elf to .o
 if exist !_pathSourceOut! (
-    set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" %_pathStaticLibraryInc% %_pathStaticLibraryLib% %_pathStaticLibraryCore%
+    set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" "C:\Users\admin\Desktop\arduino_build\Libraries\Lib\Adafruit_Fingerprint.cpp.o" %_pathStaticLibraryInc% %_pathStaticLibraryLib% %_pathStaticLibraryCore%
     !buildELF!
     echo !buildELF!
 ) else (
@@ -272,7 +272,7 @@ if "!status!"=="%result%" (
     ::nếu cổng COM vaild thực hiện upload
     set upload=%_compiler-upload% -C%_pathConf% -v -p%_opt-mcu% -carduino -P%port% -b115200 -D -Uflash:w:"!_pathSourceHEX!":i
     !upload!
-    echo Upload done !!!!
+    echo Upload done !!!
 )
 
 goto :eof
