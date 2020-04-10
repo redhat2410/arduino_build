@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <dirent.h>
 
 char* Read(char* filename);
 void Write(char* filename, char* data);
@@ -15,28 +16,19 @@ char* str_cmp_4 = "SPI.h";
 char* str_cmp_5 = "EEPROM.h";
 char* str_cmp_6 = "HID.h";
 
+//define path path.conf
+char* _pathPathFileConf = "etc\\path.conf";
+
 int main(int argc, char** argv){
-    char* str = Read(argv[1]);
-    char* token;
-    int index = 0;
-    char* result = (char*)malloc( 30 * sizeof(char) );
-    token = strtok(str, "\n");
-    while(token != NULL){
-        if(strstr(token, str_cmp_1) == NULL && strstr(token, str_cmp_2) == NULL &&
-                strstr(token, str_cmp_3) == NULL && strstr(token, str_cmp_4) == NULL &&
-                strstr(token, str_cmp_5) == NULL && strstr(token, str_cmp_6) == NULL)
-        {
-            if(strstr(token, str_cmp) != NULL) {
-                sscanf(token, "#include < %s >", result);
-                if(strchr(result, '>') != NULL)
-                    result = rmchar(result, '>');
-                Write("header.conf", result);
-            }
-        }
-        index++;
-        token = strtok(NULL, "\n");
-    }
-    printf("done...");
+    DIR* dir;
+    char* str = Read(_pathPathFileConf);
+    printf("%s\n", str);
+    str = rmchar(str, '\n');
+    printf("%s\n", str);
+    str = rmchar(str, '"');
+    printf("%s\n", str);
+
+    strcat(str, "\\hardware\\arduino\\avr\\cores\\arduino");
     return 0;
 }
 //Hàm Read thực hiện đọc dữ liệu ra từ file
@@ -75,21 +67,43 @@ void Write(char* filename, char* data){
     }
     fclose(f);
 }
-
-void Process(char* data){
-
+/*
+    Hàm writeFileConf thực hiện xử lý file source code được truyền vào
+    Lấy các header được include trong file và ghi vào file header.conf
+    @param filename: đường dẫn tới file source code
+    @return : none
+*/
+void writeFileConf(char* filename){
+    char* token;
+    char* result = (char*)malloc( 30 * sizeof(char));
+    char* str = Read(filename);
+    int index = 0;
+    token = strtok(str, "\n");
+    while(token != NULL){
+        //kiểm tra vào loại bỏ các header được define
+        if(strstr(token, str_cmp_1) == NULL && strstr(token, str_cmp_2) == NULL &&
+                strstr(token, str_cmp_3) == NULL && strstr(token, str_cmp_4) == NULL &&
+                strstr(token, str_cmp_5) == NULL && strstr(token, str_cmp_6) == NULL)
+        {
+            if( strstr(token, str_cmp) != NULL ){
+                sscanf(token, "#include < %s >", result);
+                if(strchr(result, '>')  != NULL) result = rmchar(result, '>');
+                Write("header.conf", result);
+            }
+        }
+        token = strtok(NULL,"\n");
+    }
 }
 //Ham thực hiện xóa ký tự > trong chuỗi
 char* rmchar(char* input, char chr){
     char *result = (char*)malloc( strlen(input) * sizeof(char));
-    int size=0;
+    int index = 0;
     for(int i = 0; i < strlen(input); i++){
         if(input[i] == chr){
-            size = i;
-            result[i] = 0;
-            break;
+            continue;
         }
-        result[i] = input[i];
+        result[index] = input[i];
+        index++;
     }
     return result;
 }

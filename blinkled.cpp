@@ -1,16 +1,13 @@
 #include <Arduino.h>
 
-#include <SoftwareSerial.h>
-#include < Adafruit_Fingerprint.h >
-#include <DS1307.h>
-
-SoftwareSerial mySerial(2, 3);
-
-Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
+String str = "Hello World";
 
 void setup(){
     Serial.begin(9600);
+    str += " Duc";
 }
 
 void loop(){
+    Serial.println(str);
+    delay(1000);
 }
