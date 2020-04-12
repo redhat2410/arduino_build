@@ -29,6 +29,7 @@ int main(int argc, char** argv){
     printf("%s\n", str);
 
     strcat(str, "\\hardware\\arduino\\avr\\cores\\arduino");
+    printf("%s\n", str);
     return 0;
 }
 //Hàm Read thực hiện đọc dữ liệu ra từ file
@@ -97,7 +98,7 @@ void writeFileConf(char* filename){
 //Ham thực hiện xóa ký tự > trong chuỗi
 char* rmchar(char* input, char chr){
     char *result = (char*)malloc( strlen(input) * sizeof(char));
-    int index = 0;
+    int index = 0, size = 0;
     for(int i = 0; i < strlen(input); i++){
         if(input[i] == chr){
             continue;

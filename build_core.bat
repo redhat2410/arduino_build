@@ -34,7 +34,6 @@ if not exist %_pathPathFileConf% (
     ::hỏi đường dẫn Arduino
     set /P _pathArduino=Enter the path Arduino:
     if exist !_pathArduino! (
-        echo !_pathArduino!>%_pathPathFileConf%
         goto :DEFINE_PATH
     ) else (
         goto :UNSUCCESS
@@ -54,6 +53,10 @@ set _pathVariant=!_pathArduino!\hardware\arduino\avr\variants\standard
 set _pathLibrary=!_pathArduino!\hardware\arduino\avr\libraries
 set _pathConf=!_pathArduino!\hardware\tools\avr/etc/avrdude.conf
 set _pathLibraries="C:\Users\admin\Documents\Arduino\libraries"
+::ghi dường dẫn vào file conf
+echo %_pathLibraries%>>%_pathPathFileConf%
+echo %_pathBuildInc%>>%_pathPathFileConf%
+
 
 :: Macro compiler
 set _compiler-gcc=avr-gcc
@@ -148,82 +151,7 @@ for %%f in (%_pathBuildInc%\*cpp) do (
 )
 ::----------------------------------------------------------------------------------------
 
-::----------------------Build library được đóng góp bởi cộng đồng----------------------
-::xử lý build source file .cpp vs .c
-cd /d%_pathTools%
-for /d %%f in (%_pathLibraries%\*) do (
-    set pathsource=%%f
-    for %%a in (!pathsource!\*.cpp) do (
-        set source=%%a
-        set out=%_pathBuildLibModule%\%%~nxa.o
-        set static=%_pathBuildLibModule%\%%~nxa.a
-        set exec_cpp=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -flto -w -x c++ -E -CC -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!pathsource!" "!source!" -o "!out!"
-        !exec_cpp!
-        set exec_ar=%_compiler-static-library% rcs "!static!" "!out!"
-        !exec_ar!
-        echo !exec_ar!
-    )
-    for %%b in (!pathsource!\src\*.cpp) do (
-        set source=%%b
-        set out=%_pathBuildLibModule%\%%~nxb.o
-        set static=%_pathBuildLibModule%\%%~nxb.a
-        set exec_cpp=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -flto -w -x c++ -E -CC -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!pathsource!\src" "!source!" -o "!out!"
-        !exec_cpp!
-        set exec_ar=%_compiler-static-library% rcs "!static!" "!out!"
-        !exec_ar!
-        echo !exec_ar!
-    )
-)
-::xử lý build source file .c
-for /d %%f in (%_pathLibraries%\*) do (
-    set pathsource=%%f
-    for %%a in (!pathsource!\*.c) do (
-        set source=%%a
-        set out=%_pathBuildLibModule%\%%~nxa.o
-        set static=%_pathBuildLibModule%\%%~nxa.a
-        set exec_c=%_compiler-gcc% -c -g -Os -w -std=gnu11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!pathsource!" "!source!" -o "!out!"
-        !exec_c!
-        set exec_ar=%_compiler-static-library% rcs "!static!" "!out!"
-        !exec_ar!
-        echo !exec_ar!
-    )
-    for %%b in (!pathsource!\src\*.c) do (
-        set source=%%b
-        set out=%_pathBuildLibModule%\%%~nxb.o
-        set static=%_pathBuildLibModule%\%%~nxb.a
-        set exec_c=%_compiler-gcc% -c -g -Os -w -std=gnu11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!pathsource!\src" "!source!" -o "!out!"
-        !exec_c!
-        set exec_ar=%_compiler-static-library% rcs "!static!" "!out!"
-        !exec_ar!
-        echo !exec_ar!
-    )
-)
-
-for %%f in (%_pathBuildLibModule%\*.a) do (
-    set _linkPathStatic="%%f" !_linkPathStatic!
-)
-
-::for %%f in (%_pathBuildLibModule%\*.o) do (
-::    del %%f
-::    echo Removed %%f
-::)
-
-::thực hiện copy file .h vào thư mục build
-for /d %%f in (%_pathLibraries%\*) do (
-    set pathsource=%%f
-    for %%a in (!pathsource!\*.h) do (
-        set fileHPP=%%a
-        set _copy=cp -r "!fileHPP!" %_pathBuildLibModule%
-        !_copy!
-        echo copy %%~nxa to %_pathBuildLibModule%
-    )
-    for %%b in (!pathsource!\src\*.h) do (
-        set fileHPP=%%b
-        set _copy=cp -r "!fileHPP!" %_pathBuildLibModule%
-        !_copy!
-        echo copy %%~nxb to %_pathBuildLibModule%
-    )
-)
+::----------------------Build library được đóng góp bởi cộng đồng-------------------------
 
 ::----------------------------------------------------------------------------------------
 

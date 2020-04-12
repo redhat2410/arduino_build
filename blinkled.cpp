@@ -1,4 +1,6 @@
 #include <Arduino.h>
+#include <Adafruit_Fingerprint.h>
+#include <Talkie.h>
 
 String str = "Hello World";
 
