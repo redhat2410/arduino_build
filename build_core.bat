@@ -9,11 +9,12 @@ set _pathBuildLib=%_pathCurrent%\Libraries
 set _pathBuildLibModule=%_pathBuildLib%\Lib
 set _pathBuildInc=%_pathCurrent%\inc
 set _pathBuildOut=%_pathCurrent%\Output
-set _pathBuildScr=%_pathCurrent%\src
+set _pathBuildSrc=%_pathCurrent%\src
 set _pathBuildTool=%_pathCurrent%\tools
 set _pathBuildEtc=%_pathBuildTool%\etc
 set _pathPathFileConf=%_pathBuildEtc%\path.conf
 set _pathHeaderFileConf=%_pathBuildEtc%\header.conf
+set _pathArduinoConf=%_pathBuildEtc%\pathArduino.conf
 set _pathStaticLibraryCore=%_pathBuildCore%\core.a
 set _pathStaticLibraryLib=%_pathBuildLib%\lib.a
 set _pathStaticLibraryInc=%_pathBuildInc%\inc.a
@@ -24,22 +25,23 @@ if not exist %_pathBuildLib% ( md %_pathBuildLib% )
 if not exist %_pathBuildLibModule% ( md %_pathBuildLibModule% )
 if not exist %_pathBuildInc% ( md %_pathBuildInc% )
 if not exist %_pathBuildOut% ( md %_pathBuildOut% )
-if not exist %_pathBuildScr% ( md %_pathBuildScr% )
+if not exist %_pathBuildSrc% ( md %_pathBuildSrc% )
 if not exist %_pathBuildTool% ( md %_pathBuildTool% )
 if not exist %_pathBuildEtc% ( md %_pathBuildEtc% )
 
 ::Kiểm tra file path.conf có tồn tại nếu tồn tại thì không cần hỏi đường dẫn arduino
 ::nếu file ko tồn tại thực hiện hỏi đường dẫn arduino và ghi lại file
-if not exist %_pathPathFileConf% (
+if not exist %_pathArduinoConf% (
     ::hỏi đường dẫn Arduino
     set /P _pathArduino=Enter the path Arduino:
     if exist !_pathArduino! (
+        echo !_pathArduino!>%_pathArduinoConf%
         goto :DEFINE_PATH
     ) else (
         goto :UNSUCCESS
     )
 ) else (
-    for /F "delims=" %%f in ('Type "%_pathPathFileConf%"') do (
+    for /F "delims=" %%f in ('Type "%_pathArduinoConf%"') do (
         set _pathArduino=%%f
     )
     goto :DEFINE_PATH
@@ -54,10 +56,12 @@ set _pathLibrary=!_pathArduino!\hardware\arduino\avr\libraries
 set _pathConf=!_pathArduino!\hardware\tools\avr/etc/avrdude.conf
 set _pathLibraries="C:\Users\admin\Documents\Arduino\libraries"
 ::ghi dường dẫn vào file conf
+if exist %_pathPathFileConf% ( del %_pathPathFileConf% )
 echo %_pathLibraries%>>%_pathPathFileConf%
 echo %_pathBuildInc%>>%_pathPathFileConf%
 
-
+:: Macro tools search
+set _tools_search=tools\search
 :: Macro compiler
 set _compiler-gcc=avr-gcc
 set _compiler-g++=avr-g++
@@ -138,13 +142,53 @@ for /d %%f in (%_pathLibrary%\*) do (
 ::thực hiện build thư viện người dùng tự define trong thư mục inc/
 ::mục tiêu thực hiên build thư viên ra file .a (static library)
 cd /d%_pathCurrent%
-for %%f in (%_pathBuildInc%\*cpp) do (
-    set pathSource=%%f
-    set pathSourceOut=%_pathBuildOut%\%%~nxf.o
+for %%f in (%_pathBuildSrc%\*.cpp) do (
+    set tpathSource=%%f
+    set tpathSourceOut=%_pathBuildOut%\%%~nxf.o
+    set toolsSearch=%_tools_search% !tpathSource!
+    !toolsSearch!
+    echo !toolsSearch!
+    ::sau khi chạy tools search
     cd /d%_pathTools%
-    set exec=%_compiler-g++% -c -g -Os -w -std=gnu++11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% "!pathSource!" -o "!pathSourceOut!"
+    if exist %_pathHeaderFileConf% (
+        for /F "delims=" %%d in ('Type "%_pathHeaderFileConf%"') do (
+            set pathRoot=%%d
+            ::compile file .cpp
+            for %%r in (!pathRoot!\*.cpp) do (
+                set pathSource=%%r
+                set pathSourceOut=%_pathBuildLibModule%/%%~nxr.o
+                set pathSourceStatic=%_pathBuildLibModule%/%%~nxr.a
+                set exec=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!pathRoot!" "!pathSource!" -o "!pathSourceOut!"
+                !exec!
+                echo !exec!
+                set static=%_compiler-static-library% rcs "!pathSourceStatic!" "!pathSourceOut!"
+                !static!
+                echo !static!
+            )
+            ::compile file .c
+            for %%r in (!pathRoot!\*.c) do (
+                set pathSource=%%r
+                set pathSourceOut=%_pathBuildLibModule%/%%~nxr.o
+                set pathSourceStatic=%_pathBuildLibModule%/%%~nxr.a
+                set exec=%_compiler-gcc% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!pathRoot!" "!pathSource!" -o "!pathSourceOut!"
+                !exec!
+                set static=%_compiler-static-library% rcs "!pathSourceStatic!" "!pathSourceOut!"
+                !static!
+                echo !static!
+            )
+            ::copy header file to build library
+            for %%r in (!pathRoot!\*.h) do (
+                set _copy=cp -r %%r %_pathBuildLibModule%
+                !_copy!
+                echo copy %%r to %_pathBuildLibModule%
+            )
+        )
+    )
+
+    set exec=%_compiler-g++% -c -g -Os -w -std=gnu++11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I%_pathBuildLibModule% -I%_pathBuildInc% "!tpathSource!" -o "!tpathSourceOut!"
     !exec!
-    set exec_sl=%_compiler-static-library% rcs %_pathStaticLibraryInc% "!pathSourceOut!"
+    echo !exec!
+    set exec_sl=%_compiler-static-library% rcs %_pathStaticLibraryInc% "!tpathSourceOut!"
     !exec_sl!
     echo !exec_sl!
     cd /d%_pathCurrent%
@@ -176,11 +220,48 @@ if exist %_pathSourceHEX% (
     echo Removed %_pathSourceHEX%
 )
 
+set toolsSearch=%_tools_search% %_pathSourceFile%
+%toolsSearch%
+echo %toolsSearch%
 cd /d%_pathTools%
-::compile file .cpp to .o (outfile)
-set exec_sketch=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I%_pathBuildLibModule% -I%_pathBuildInc% -o "!_pathSourceOut!" "!_pathSourceFile!"
-!exec_sketch!
+if exist %_pathHeaderFileConf% (
+    for /F "delims=" %%f in (%_pathHeaderFileConf%) do (
+        set pathRoot=%%f
+        for %%r in (!pathRoot!\*.cpp) do (
+            set pathSource=%%r
+            set pathSourceOut=%_pathBuildLibModule%/%%~nxr.o
+            set pathSourceStatic=%_pathBuildLibModule%/%%~nxr.a
+            set exec=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!pathRoot!" "!pathSource!" -o "!pathSourceOut!"
+            !exec!
+            echo !exec!
+            set static=%_compiler-static-library% rcs "!pathSourceStatic!" "!pathSourceOut!"
+            !static!
+            echo !static!
+        )
+        for %%r in (!pathRoot!\*.c) do (
+            set pathSource=%%r
+            set pathSourceOut=%_pathBuildLibModule%/%%~nxr.o
+            set pathSourceStatic=%_pathBuildLibModule%/%%~nxr.a
+            set exec=%_compiler-gcc% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!pathRoot!" "!pathSource!" -o "!pathSourceOut!"
+            !exec!
+            set static=%_compiler-static-library% rcs "!pathSourceStatic!" "!pathSourceOut!"
+            !static!
+            echo !static!
+            set linkstatic=!pathSourceStatic! !linkstatic!
+        )
+        for %%r in (!pathRoot!\*.h) do (
+            set _copy=cp -r %%r %_pathBuildLibModule%
+            !_copy!
+            echo copy %%r to %_pathBuildLibModule%
+        )        
+    )
+)
 
+
+::compile file .cpp to .o (outfile)
+set exec_sketch=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I%_pathBuildLibModule% -I%_pathBuildInc% "!_pathSourceFile!" -o "!_pathSourceOut!"
+!exec_sketch!
+echo !exec_sketch!
 ::build file elf to .o
 if exist !_pathSourceOut! (
     if exist !_pathStaticLibraryInc! (

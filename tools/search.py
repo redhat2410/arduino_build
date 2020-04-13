@@ -2,8 +2,8 @@ from os import path
 import os
 import sys
 
-pathHeaderConf = "etc\\header.conf"
-pathFileConf = "etc\\path.conf"
+pathHeaderConf = "tools\\etc\\header.conf"
+pathFileConf = "tools\\etc\\path.conf"
 
 # function searchHeader implement search header name have been included in source file
 # @param source : path to source file
@@ -27,7 +27,7 @@ def searchHeader(source):
                 result = line.split('<')
                 result = result[1].split('>')
                 if (result[0] != word_1) and (result[0] != word_2) and (result[0] != word_3) and (result[0] != word_4) and (result[0] != word_5) and (result[0] != word_6) :
-                    writeFile("etc\\header.conf", result[0]+"\n")
+                    writeFile(pathHeaderConf, result[0]+"\n")
         file.close()       
     else:
         print("error source file is not exist.")
@@ -54,7 +54,11 @@ def searchPathHeader():
         file = open(pathFileConf, "r", encoding='utf-8')
         for line in file:
             t_str = line.split('\n')
-            pathFolder.append(t_str[0])
+            if t_str[0].find('"') != -1:
+                t_str = t_str[0].split('"')
+                pathFolder.append(t_str[1])
+            else:
+                pathFolder.append(t_str[0])
         file.close()
     else:
         print("Error configure file is not exist.")
@@ -64,7 +68,11 @@ def searchPathHeader():
         file = open(pathHeaderConf, "r", encoding='utf-8')
         for line in file:
             t_str = line.split('\n')
-            headerName.append(t_str[0])
+            if t_str[0].find('"') != -1:
+                t_str = t_str[0].split('"')
+                headerName.append(t_str[1])
+            else:
+                headerName.append(t_str[0])
         file.close()
     else:
         print("Error configure file is not exist.")
@@ -76,9 +84,17 @@ def searchPathHeader():
             for root, dirs, files in os.walk(t_path):
                 if t_name in files:
                     writeFile(pathHeaderConf, root + "\n")
+    
+    if path.exists(pathHeaderConf):
+        print("Writing " + pathHeaderConf + " done.")
+    else:
+        print("Writing " + pathHeaderConf + " failed.")
 
 
-searchHeader(sys.argv[1])
-searchPathHeader()
+if len(sys.argv) > 1:
+    searchHeader(sys.argv[1])
+    searchPathHeader()
+else:
+    print("Error no input source file.")
 
     
