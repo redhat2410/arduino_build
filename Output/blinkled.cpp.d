@@ -1,5 +1,5 @@
-E:\build_arduino\arduino_build\Output\blinkled.cpp.o: \
- E:\build_arduino\arduino_build\blinkled.cpp \
+C:\Users\admin\Desktop\arduino_build\Output\blinkled.cpp.o: \
+ C:\Users\admin\Desktop\arduino_build\blinkled.cpp \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \
@@ -11,4 +11,6 @@ E:\build_arduino\arduino_build\Output\blinkled.cpp.o: \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
- E:\build_arduino\arduino_build\Libraries\Lib/RTClib.h
+ C:\Users\admin\Desktop\arduino_build\Libraries/SoftwareSerial.h \
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Stream.h \
+ C:\Users\admin\Desktop\arduino_build\Libraries\Lib/Add.h

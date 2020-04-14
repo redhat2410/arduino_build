@@ -17,29 +17,43 @@ set _pathStaticLibraryCore=%_pathBuildCore%\core.a
 set _pathStaticLibraryLib=%_pathBuildLib%\lib.a
 set _pathStaticLibraryInc=%_pathBuildInc%\inc.a
 
-set _tools_search=tools\search
+set _pathLibrary="C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries"
 
-for %%f in (%_pathBuildScr%\*.cpp) do (
-    set pathSource=%%f
-    set pathSourceOut=%_pathBuildOut%\%%~nxf.o
-    set toolsSearch=%_tools_search% !pathSource!
-    %toolsSearch%
-    echo %toolsSearch%
-    ::sau khi chạy tools search
-    if exist %_pathHeaderFileConf% (
-        for /F "delims=" %%d in ('Type "%_pathHeaderFileConf%"') do (
-            set pathRoot=%%d
-            set pathLibModule=-I!pathRoot! !pathLibModule!
-            for %%r in (!pathRoot!\*.cpp) do (
-                echo %%r
-            )
-            for %%r in (!pathRoot!\*.c) do (
-                echo %%r
-            )
-            for %%r in (!pathRoot!\*.h) do (
-                echo %%r
-            )
+set _tools_search=tools\search
+set _compiler-gcc=avr-gcc
+set _compiler-g++=avr-g++
+
+for /d %%f in (%_pathLibrary%\*) do (
+    set _pathRoot=%%f
+    ::compile file .cpp
+    for %%r in ("!_pathRoot!"\src\*.cpp) do (
+        set pathSource=%%r
+        set pathSourceOut=%_pathBuildLib%\%%~nxr.o
+        set _exec=%_compiler-g++% -c -g -Os -w -std=gnu++11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -I%_pathCore% -I%_pathVariant% "!pathSource!" -o "!pathSourceOut!"
+        ::!_exec!
+        echo !_exec!
+        set _static=%_compiler-static-library% rcs %_pathStaticLibraryLib% "!pathSourceOut!"
+        ::!_static!
+        echo !_static!
+    )
+    ::compile file .h
+    for %%r in ("!_pathRoot!"\src\*.h) do (
+        set _copy=cp -r %%r %_pathBuildLib%
+        ::!_copy!
+        echo !_copy!
+    )
+    
+    for /d %%r in ("!_pathRoot!"\src\*) do (
+        set _pathDir=%%r
+        for %%d in ("!_pathDir!"\*.c) do (
+            set pathSource=%%d
+            set pathSourceOut=%_pathBuildLib%\%%~nxd.o
+            set _exec=%_compiler-gcc% -c -g -Os -w -std=gnu11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -I%_pathCore% -I%_pathVariant% "!pathSource!" -o "!pathSourceOut!" 
+            ::!_exec!
+            echo !_exec!
+            set _static=%_compiler-static-library% rcs %_pathStaticLibraryLib% "!pathSourceOut!"
+            ::!_static!
+            echo !_static!
         )
     )
-    echo !pathLibModule!
 )

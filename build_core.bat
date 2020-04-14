@@ -18,6 +18,7 @@ set _pathArduinoConf=%_pathBuildEtc%\pathArduino.conf
 set _pathStaticLibraryCore=%_pathBuildCore%\core.a
 set _pathStaticLibraryLib=%_pathBuildLib%\lib.a
 set _pathStaticLibraryInc=%_pathBuildInc%\inc.a
+set _pathInclude=%_pathBuildEtc%\includes.conf
 
 :: create sub-folder 'core, Libraries, inc, Output, src' if not exist
 if not exist %_pathBuildCore% ( md %_pathBuildCore% )
@@ -119,21 +120,38 @@ for %%f in (%_pathCore%\*".cpp") do (
 ::  thư viện ngoài được nhà phát triển thêm vào ở thư mục \inc\
 ::  đối với thư viện do nhà phát triển thực hiện thì phải đóng gói thành file static library "*.a"
 
+cd /d%_pathTools%
 for /d %%f in (%_pathLibrary%\*) do (
-    set pathSource=%%f\src
-    set pathHPP=%%f\src\%%~nxf.h
-    set pathCPP=%%f\src\%%~nxf.cpp
-    set pathout=%_pathBuildLib%\%%~nxf.o
-    ::thực hiện build thư viện
-    set _exec=%_compiler-g++% -c -g -Os -w -std=gnu++11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -I%_pathCore% -I%_pathVariant% -I"!pathSource!" "!pathCPP!" -o "!pathout!"
-    !_exec!
-
-    set _execStatic=%_compiler-static-library% rcs "%_pathStaticLibraryLib%" "!pathout!"
-    !_execStatic!
-    ::thực hiện copy các file header tới workspace
-    set _copy=cp -r "!pathHPP!" %_pathBuildLib%
-    !_copy!
-    echo !_copy!
+    set _pathRoot=%%f
+    ::compile file .cpp
+    for %%r in ("!_pathRoot!"\src\*.cpp) do (
+        set pathSource=%%r
+        set pathSourceOut=%_pathBuildLib%\%%~nxr.o
+        set _exec=%_compiler-g++% -c -g -Os -w -std=gnu++11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -I%_pathCore% -I%_pathVariant% -I"!_pathRoot!\src" "!pathSource!" -o "!pathSourceOut!"
+        !_exec!
+        set _static=%_compiler-static-library% rcs %_pathStaticLibraryLib% "!pathSourceOut!"
+        !_static!
+        echo !_static!
+    )
+    ::compile file .h
+    for %%r in ("!_pathRoot!"\src\*.h) do (
+        set _copy=cp -r "%%r" %_pathBuildLib%
+        !_copy!
+        echo copy %%~nxr %_pathBuildLib%
+    )
+    
+    for /d %%r in ("!_pathRoot!"\src\*) do (
+        set _pathDir=%%r
+        for %%d in ("!_pathDir!"\*.c) do (
+            set pathSource=%%d
+            set pathSourceOut=%_pathBuildLib%\%%~nxd.o
+            set _exec=%_compiler-gcc% -c -g -Os -w -std=gnu11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -I%_pathCore% -I%_pathVariant% "!pathSource!" -o "!pathSourceOut!" 
+            !_exec!
+            set _static=%_compiler-static-library% rcs %_pathStaticLibraryLib% "!pathSourceOut!"
+            !_static!
+            echo !_static!
+        )
+    )
 )
 
 ::----------------------------------------------------------------------------------------
@@ -163,7 +181,7 @@ for %%f in (%_pathBuildSrc%\*.cpp) do (
                 echo !exec!
                 set static=%_compiler-static-library% rcs "!pathSourceStatic!" "!pathSourceOut!"
                 !static!
-                echo !static!
+                echo !pathSourceStatic!>>%_pathInclude%
             )
             ::compile file .c
             for %%r in (!pathRoot!\*.c) do (
@@ -172,9 +190,10 @@ for %%f in (%_pathBuildSrc%\*.cpp) do (
                 set pathSourceStatic=%_pathBuildLibModule%/%%~nxr.a
                 set exec=%_compiler-gcc% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!pathRoot!" "!pathSource!" -o "!pathSourceOut!"
                 !exec!
+                echo !exec!
                 set static=%_compiler-static-library% rcs "!pathSourceStatic!" "!pathSourceOut!"
                 !static!
-                echo !static!
+                echo !pathSourceStatic!>>%_pathInclude%
             )
             ::copy header file to build library
             for %%r in (!pathRoot!\*.h) do (
@@ -236,7 +255,7 @@ if exist %_pathHeaderFileConf% (
             echo !exec!
             set static=%_compiler-static-library% rcs "!pathSourceStatic!" "!pathSourceOut!"
             !static!
-            echo !static!
+            echo !pathSourceStatic!>>%_pathInclude%
         )
         for %%r in (!pathRoot!\*.c) do (
             set pathSource=%%r
@@ -246,8 +265,7 @@ if exist %_pathHeaderFileConf% (
             !exec!
             set static=%_compiler-static-library% rcs "!pathSourceStatic!" "!pathSourceOut!"
             !static!
-            echo !static!
-            set linkstatic=!pathSourceStatic! !linkstatic!
+            echo !pathSourceStatic!>>%_pathInclude%
         )
         for %%r in (!pathRoot!\*.h) do (
             set _copy=cp -r %%r %_pathBuildLibModule%
@@ -265,11 +283,11 @@ echo !exec_sketch!
 ::build file elf to .o
 if exist !_pathSourceOut! (
     if exist !_pathStaticLibraryInc! (
-        set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" %_pathStaticLibraryInc% %_pathStaticLibraryLib% %_pathStaticLibraryCore%
+        set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" %_pathStaticLibraryInc% "C:\Users\admin\Desktop\arduino_build\Libraries\Lib\RTClib.cpp.a" %_pathStaticLibraryLib% %_pathStaticLibraryCore%
         !buildELF!
         echo !buildELF!
     ) else (
-        set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" %_pathStaticLibraryLib% %_pathStaticLibraryCore%
+        set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" "C:\Users\admin\Desktop\arduino_build\Libraries\Lib\RTClib.cpp.a" %_pathStaticLibraryLib% %_pathStaticLibraryCore% 
         !buildELF!
         echo !buildELF!
     )
