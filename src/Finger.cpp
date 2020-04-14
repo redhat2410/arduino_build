@@ -1,4 +1,6 @@
 #include <Finger.h>
+#include <SoftwareSerial.h>
+#include <Adafruit_Fingerprint.h>
 
 SoftwareSerial mySerial(2, 3);
 

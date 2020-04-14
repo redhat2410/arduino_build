@@ -1,5 +1,6 @@
-C:\Users\admin\Desktop\arduino_build\Output\blinkled.cpp.o: \
- C:\Users\admin\Desktop\arduino_build\blinkled.cpp \
+C:\Users\admin\Desktop\arduino_build\Libraries\Lib/Adafruit_Fingerprint.cpp.o: \
+ C:\Users\admin\Documents\Arduino\libraries\Adafruit_Fingerprint_Sensor_Library\Adafruit_Fingerprint.cpp \
+ C:\Users\admin\Documents\Arduino\libraries\Adafruit_Fingerprint_Sensor_Library\Adafruit_Fingerprint.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \
@@ -11,7 +12,5 @@ C:\Users\admin\Desktop\arduino_build\Output\blinkled.cpp.o: \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
- C:\Users\admin\Desktop\arduino_build\Libraries\Lib/Finger.h \
  C:\Users\admin\Desktop\arduino_build\Libraries/SoftwareSerial.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Stream.h \
- C:\Users\admin\Desktop\arduino_build\Libraries\Lib/Adafruit_Fingerprint.h
+ C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Stream.h

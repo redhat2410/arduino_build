@@ -163,6 +163,7 @@ cd /d%_pathCurrent%
 for %%f in (%_pathBuildSrc%\*.cpp) do (
     set tpathSource=%%f
     set tpathSourceOut=%_pathBuildOut%\%%~nxf.o
+    echo !tpathSource!
     set toolsSearch=%_tools_search% !tpathSource!
     !toolsSearch!
     echo !toolsSearch!
