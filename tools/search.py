@@ -4,6 +4,7 @@ import sys
 
 pathHeaderConf = "tools\\etc\\header.conf"
 pathFileConf = "tools\\etc\\path.conf"
+pathIncludeConf = "tools\\etc\\includes.conf"
 
 # function searchHeader implement search header name have been included in source file
 # @param source : path to source file
@@ -18,6 +19,8 @@ def searchHeader(source):
     #check file header conf is exist, if exist will be remove it
     if path.exists(pathHeaderConf):
         os.remove(pathHeaderConf)
+    if path.exists(pathIncludeConf):
+        os.remove(pathIncludeConf)
     #process source file to get header name and write it to log file
     if path.exists(source):
         file = open(source, "r", encoding='utf-8')
@@ -27,10 +30,10 @@ def searchHeader(source):
                 result = line.split('<')
                 result = result[1].split('>')
                 if (result[0] != word_1) and (result[0] != word_2) and (result[0] != word_3) and (result[0] != word_4) and (result[0] != word_5) and (result[0] != word_6) :
-                    writeFile(pathHeaderConf, result[0]+"\n")
+                    writeFile(pathIncludeConf, result[0]+"\n")
         file.close()       
     else:
-        print("error source file is not exist.")
+        print("Error source file is not exist.")
 
 def writeFile(filename, data):
     if path.exists(filename) :
@@ -64,8 +67,8 @@ def searchPathHeader():
         print("Error configure file is not exist.")
         return
     #check file header.conf is exist
-    if path.exists(pathHeaderConf):
-        file = open(pathHeaderConf, "r", encoding='utf-8')
+    if path.exists(pathIncludeConf):
+        file = open(pathIncludeConf, "r", encoding='utf-8')
         for line in file:
             t_str = line.split('\n')
             if t_str[0].find('"') != -1:
@@ -78,7 +81,6 @@ def searchPathHeader():
         print("Error configure file is not exist.")
         return
 
-    os.remove(pathHeaderConf)
     for t_path in pathFolder:
         for t_name in headerName:
             for root, dirs, files in os.walk(t_path):

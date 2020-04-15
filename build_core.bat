@@ -5,20 +5,22 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 :: Create folder library Core 
 set _pathCurrent=%cd%
 set _pathBuildCore=%_pathCurrent%\core
-set _pathBuildLib=%_pathCurrent%\Libraries
-set _pathBuildLibModule=%_pathBuildLib%\Lib
+set _pathBuildLib=%_pathCurrent%\libraries
+set _pathBuildLibModule=%_pathBuildLib%\lib
 set _pathBuildInc=%_pathCurrent%\inc
-set _pathBuildOut=%_pathCurrent%\Output
-set _pathBuildSrc=%_pathCurrent%\src
+set _pathBuildOut=%_pathCurrent%\output
 set _pathBuildTool=%_pathCurrent%\tools
 set _pathBuildEtc=%_pathBuildTool%\etc
-set _pathPathFileConf=%_pathBuildEtc%\path.conf
-set _pathHeaderFileConf=%_pathBuildEtc%\header.conf
-set _pathArduinoConf=%_pathBuildEtc%\pathArduino.conf
+
 set _pathStaticLibraryCore=%_pathBuildCore%\core.a
 set _pathStaticLibraryLib=%_pathBuildLib%\lib.a
 set _pathStaticLibraryInc=%_pathBuildInc%\inc.a
-set _pathInclude=%_pathBuildEtc%\includes.conf
+
+set _pathIncludeConf=%_pathBuildEtc%\includes.conf
+set _pathPathFileConf=%_pathBuildEtc%\path.conf
+set _pathHeaderFileConf=%_pathBuildEtc%\header.conf
+set _pathArduinoConf=%_pathBuildEtc%\pathArduino.conf
+set _pathStaticConf=%_pathBuildEtc%\pathStaticLib.conf
 
 :: create sub-folder 'core, Libraries, inc, Output, src' if not exist
 if not exist %_pathBuildCore% ( md %_pathBuildCore% )
@@ -26,7 +28,6 @@ if not exist %_pathBuildLib% ( md %_pathBuildLib% )
 if not exist %_pathBuildLibModule% ( md %_pathBuildLibModule% )
 if not exist %_pathBuildInc% ( md %_pathBuildInc% )
 if not exist %_pathBuildOut% ( md %_pathBuildOut% )
-if not exist %_pathBuildSrc% ( md %_pathBuildSrc% )
 if not exist %_pathBuildTool% ( md %_pathBuildTool% )
 if not exist %_pathBuildEtc% ( md %_pathBuildEtc% )
 
@@ -182,7 +183,7 @@ for %%f in (%_pathBuildSrc%\*.cpp) do (
                 echo !exec!
                 set static=%_compiler-static-library% rcs "!pathSourceStatic!" "!pathSourceOut!"
                 !static!
-                echo !pathSourceStatic!>>%_pathInclude%
+                echo !pathSourceStatic!>>%_pathStaticConf%
             )
             ::compile file .c
             for %%r in (!pathRoot!\*.c) do (
@@ -194,7 +195,7 @@ for %%f in (%_pathBuildSrc%\*.cpp) do (
                 echo !exec!
                 set static=%_compiler-static-library% rcs "!pathSourceStatic!" "!pathSourceOut!"
                 !static!
-                echo !pathSourceStatic!>>%_pathInclude%
+                echo !pathSourceStatic!>>%_pathStaticConf%
             )
             ::copy header file to build library
             for %%r in (!pathRoot!\*.h) do (
@@ -256,7 +257,7 @@ if exist %_pathHeaderFileConf% (
             echo !exec!
             set static=%_compiler-static-library% rcs "!pathSourceStatic!" "!pathSourceOut!"
             !static!
-            echo !pathSourceStatic!>>%_pathInclude%
+            echo !pathSourceStatic!>>%_pathStaticConf%
         )
         for %%r in (!pathRoot!\*.c) do (
             set pathSource=%%r
@@ -266,7 +267,7 @@ if exist %_pathHeaderFileConf% (
             !exec!
             set static=%_compiler-static-library% rcs "!pathSourceStatic!" "!pathSourceOut!"
             !static!
-            echo !pathSourceStatic!>>%_pathInclude%
+            echo !pathSourceStatic!>>%_pathStaticConf%
         )
         for %%r in (!pathRoot!\*.h) do (
             set _copy=cp -r %%r %_pathBuildLibModule%
