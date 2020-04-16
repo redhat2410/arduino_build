@@ -6,11 +6,12 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 set _pathCurrent=%cd%
 set _pathBuildCore=%_pathCurrent%\core
 set _pathBuildLib=%_pathCurrent%\libraries
-set _pathBuildLibModule=%_pathBuildLib%\lib
 set _pathBuildInc=%_pathCurrent%\inc
+set _pathBuildLibModule=%_pathBuildInc%\lib
 set _pathBuildOut=%_pathCurrent%\output
 set _pathBuildTool=%_pathCurrent%\tools
 set _pathBuildEtc=%_pathBuildTool%\etc
+
 
 set _pathStaticLibraryCore=%_pathBuildCore%\core.a
 set _pathStaticLibraryLib=%_pathBuildLib%\lib.a
@@ -20,6 +21,9 @@ set _pathIncludeConf=%_pathBuildEtc%\includes.conf
 set _pathPathFileConf=%_pathBuildEtc%\path.conf
 set _pathHeaderFileConf=%_pathBuildEtc%\header.conf
 set _pathArduinoConf=%_pathBuildEtc%\pathArduino.conf
+set _pathTempConf=%_pathBuildEtc%\temp.conf
+set _pathBackupIncConf=%_pathBuildEtc%\backupInc.conf
+set _pathBackupLibConf=%_pathBuildEtc%\backupLib.conf
 set _pathStaticConf=%_pathBuildEtc%\pathStaticLib.conf
 
 :: create sub-folder 'core, Libraries, inc, Output, src' if not exist

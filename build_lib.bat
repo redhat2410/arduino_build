@@ -24,6 +24,7 @@ set _pathArduinoConf=%_pathBuildEtc%\pathArduino.conf
 set _pathTempConf=%_pathBuildEtc%\temp.conf
 set _pathBackupIncConf=%_pathBuildEtc%\backupInc.conf
 set _pathBackupLibConf=%_pathBuildEtc%\backupLib.conf
+set _pathStaticConf=%_pathBuildEtc%\pathStaticLib.conf
 
 :: create sub-folder 'core, Libraries, inc, Output, src' if not exist
 if not exist %_pathBuildCore% ( md %_pathBuildCore% )
@@ -62,7 +63,6 @@ set _pathConf=!_pathArduino!\hardware\tools\avr/etc/avrdude.conf
 set _pathLibraries="C:\Users\admin\Documents\Arduino\libraries"
 ::ghi dường dẫn vào file conf
 if exist %_pathPathFileConf% ( del %_pathPathFileConf% )
-echo %_pathLibraries%>>%_pathPathFileConf%
 echo %_pathBuildInc%>>%_pathPathFileConf%
 
 :: Macro tools search
@@ -82,21 +82,24 @@ for %%f in (%_pathBuildOut%\*) do (
     del %%f
 )
 
-del %_pathBackupIncConf%
-del %_pathBackupLibConf%
+if exist %_pathBackupIncConf% ( del %_pathBackupIncConf% )
+if exist %_pathBackupLibConf% ( del %_pathBackupLibConf% )
+if exist %_pathStaticConf% ( del %_pathStaticConf% )
 
 cd /d%_pathCurrent%
 for %%f in (%_pathCurrent%\*.cpp) do (
     set _pathSourceFile=%%f
     set _pathSourceOut=%_pathBuildOut%\%%~nxf.o
+    set _pathSourceELF=%_pathBuildOut%\%%~nxf.elf
+    set _pathSourceHEX=%_pathBuildOut%\%%~nxf.hex
 )
 
 if exist %_pathTempConf% ( del %_pathTempConf% )
 
 ::thực hiện search header trong file .cpp
 
-set toolsSearch=%_tools_search% %_pathSourceFile%
-%toolsSearch%
+set toolsSearch=%_tools_search% !_pathSourceFile!
+!toolsSearch!
 ::thực hiện phân loại các các thư viện trong file thư mục /inc và thư mục /lib
 ::Phân loại các thư viện trong /lib để build trước
 ::thực hiện duyệt tất cả các file .h và .c/.cpp được include 
@@ -119,11 +122,12 @@ if exist %_pathHeaderFileConf% if exist %_pathIncludeConf% (
                         set source=%%d
                         set output=%_pathBuildOut%\%%~nxd.o
                         if not exist !output! (
-                            echo "!root!">>%_pathBackupLibConf%                        
+                            echo !root!>>%_pathBackupLibConf%                        
                             set compile=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!root!" "!source!" -o "!output!"
                             cd /d %_pathTools%
                             !compile!
-                            echo !compile!
+                            echo build !source!
+                            echo !output!>>%_pathStaticConf%
                             cd /d %_pathCurrent%
                         )
                     )
@@ -131,11 +135,12 @@ if exist %_pathHeaderFileConf% if exist %_pathIncludeConf% (
                         set source=%%d
                         set output=%_pathBuildOut%\%%~nxd.o
                         if not exist !output! (        
-                            echo "!root!">>%_pathBackupLibConf%                 
+                            echo !root!>>%_pathBackupLibConf%                 
                             set compile=%_compiler-gcc% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!root!" "!source!" -o "!output!"
                             cd /d %_pathTools%
                             !compile!
-                            echo !compile!
+                            echo build !source!
+                            echo !output!>>%_pathStaticConf%
                             cd /d %_pathCurrent%
                         )
                     )
@@ -164,34 +169,59 @@ if exist %_pathHeaderFileConf% (
 :EXT_LOOP
 if exist %_pathBackupLibConf% (
     for /F "delims=" %%f in ('Type "%_pathBackupLibConf%"') do (
-        set pathLib=-I%%f !pathLib!
+        set pathLib=-I"%%~ff" !pathLib!
     )
 )
-
-
 if exist %_pathBackupIncConf% (
     for /F "delims=" %%f in ('Type "%_pathBackupIncConf%"') do (
         set root=%%~df%%~pf
         set source_cpp=%%~df%%~pf%%~nf.cpp
         set source_c=%%~df%%~pf%%~nf.c
         set output=%_pathBuildOut%\%%~nf.o
+        set Lstatic=%_pathBuildInc%\%%~nf.a
         if exist !source_cpp! (
             if not exist !output! (
                 cd /d %_pathTools%
-                set compile=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!root!" "!pathLib!" "!source_cpp!" -o "!output!"
+                ::set pathLib=!pathLib!-I"!root:~0,-1!"
+                set fullpath= !pathLib!-I"!root:~0,-1!"
+                set compile=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I"%_pathBuildLib%" -I"!root:~0,-1!" !pathLib!"!source_cpp!" -o "!output!" 
                 !compile!
-                echo !compile!
+                echo build !source_cpp!
+                set static_lib=%_compiler-static-library% rcs "!Lstatic!" "!output!"
+                !static_lib!
+                echo !Lstatic!>>%_pathStaticConf%
                 cd /d %_pathCurrent%
             )
         )
         if exist !source_c! (
             if not exist !output! (
                 cd /d %_pathTools%
-                set compile=%_compiler-gcc% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!root!" "!pathLib!" "!source_c!" -o "!output!"
+                ::set pathLib=!pathLib! -I"!root:~0,-1!"
+                set fullpath= !pathLib! -I"!root:~0,-1!"
+                set compile=%_compiler-gcc% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I"%_pathBuildLib%" -I"!root:~0,-1!" !pathLib!"!source_c!" -o "!output!"
                 !compile!
-                echo !compile!
+                echo build !source_c!
+                set static_lib=%_compiler-static-library% rcs "!Lstatic!" "!output!"
+                !static_lib!
+                echo !Lstatic!>>%_pathStaticConf%
                 cd /d %_pathCurrent%
             )
         )
     )
+)
+cd /d %_pathTools%
+set compile=%_compiler-g++% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% !fullpath! "!_pathSourceFile!" -o "!_pathSourceOut!"
+!compile!
+echo build !_pathSourceFile!
+
+if exist %_pathStaticConf% (
+    for /F "delims=" %%f in ('Type "%_pathStaticConf%"') do (
+        set staticLink="%%f" !staticLink!
+    )
+)
+
+if exist %_pathSourceOut% (
+    set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" !staticLink!%_pathStaticLibraryLib% %_pathStaticLibraryCore%
+    !buildELF!
+    echo !buildELF!
 )

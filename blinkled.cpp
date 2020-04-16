@@ -5,6 +5,7 @@
 
 void setup () {
   Serial.begin(9600);
+  _sub(1,2);
 }
 
 void loop () {
