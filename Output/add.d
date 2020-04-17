@@ -13,4 +13,4 @@ C:\Users\admin\Desktop\arduino_build\output\add.o: \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
  C:\Users\admin\Desktop\arduino_build\inc/sub.h \
- C:\Users\admin\Desktop\arduino_build\inc\lib\RTCLib/RTClib.h
+ C:\Users\admin\Documents\Arduino\libraries\RTClib-master/RTClib.h

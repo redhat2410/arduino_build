@@ -1,4 +1,5 @@
 from os import path
+from pathlib import Path
 import os
 import sys
 
@@ -16,6 +17,7 @@ def searchHeader(source):
     word_4 = "SPI.h"
     word_5 = "HID.h"
     word_6 = "EEPROM.h"
+    word_7 = ""
     #check file header conf is exist, if exist will be remove it
     if path.exists(pathHeaderConf):
         os.remove(pathHeaderConf)
@@ -23,13 +25,15 @@ def searchHeader(source):
         os.remove(pathIncludeConf)
     #process source file to get header name and write it to log file
     if path.exists(source):
+        if source.find(".cpp") != -1 or source.find(".c") != -1 :
+            word_7 = Path(source).name.replace(".cpp",".h") if source.find(".cpp") else Path(source).name.replace(".c", ".h")
         file = open(source, "r", encoding='utf-8')
         for line in file:
             if line.find(word) == 0 :
                 #get header name
                 result = line.split('<')
                 result = result[1].split('>')
-                if (result[0] != word_1) and (result[0] != word_2) and (result[0] != word_3) and (result[0] != word_4) and (result[0] != word_5) and (result[0] != word_6) :
+                if (result[0] != word_1) and (result[0] != word_2) and (result[0] != word_3) and (result[0] != word_4) and (result[0] != word_5) and (result[0] != word_6) and (result[0] != word_7) :
                     writeFile(pathIncludeConf, result[0]+"\n")
         file.close()       
     else:

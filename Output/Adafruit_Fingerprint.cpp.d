@@ -1,6 +1,6 @@
 C:\Users\admin\Desktop\arduino_build\output\Adafruit_Fingerprint.cpp.o: \
- C:\Users\admin\Desktop\arduino_build\inc\lib\Adafruit_Fingerprint\Adafruit_Fingerprint.cpp \
- C:\Users\admin\Desktop\arduino_build\inc\lib\Adafruit_Fingerprint\Adafruit_Fingerprint.h \
+ C:\Users\admin\Documents\Arduino\libraries\Adafruit_Fingerprint_Sensor_Library\Adafruit_Fingerprint.cpp \
+ C:\Users\admin\Documents\Arduino\libraries\Adafruit_Fingerprint_Sensor_Library\Adafruit_Fingerprint.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \

@@ -116,6 +116,7 @@ if exist %_pathHeaderFileConf% if exist %_pathIncludeConf% (
                 if !root! == %_pathBuildInc% (
                     echo !pathFile!>>%_pathTempConf%
                     echo !pathFile!>>%_pathBackupIncConf%
+                    echo %_pathBuildOut%\%%~nf.o>>%_pathStaticConf%
                 ) else (
                     ::build lib
                     for %%d in (!root!\*.cpp) do (
@@ -182,28 +183,24 @@ if exist %_pathBackupIncConf% (
         if exist !source_cpp! (
             if not exist !output! (
                 cd /d %_pathTools%
-                ::set pathLib=!pathLib!-I"!root:~0,-1!"
                 set fullpath= !pathLib!-I"!root:~0,-1!"
                 set compile=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I"%_pathBuildLib%" -I"!root:~0,-1!" !pathLib!"!source_cpp!" -o "!output!" 
                 !compile!
                 echo build !source_cpp!
                 set static_lib=%_compiler-static-library% rcs "!Lstatic!" "!output!"
                 !static_lib!
-                echo !Lstatic!>>%_pathStaticConf%
                 cd /d %_pathCurrent%
             )
         )
         if exist !source_c! (
             if not exist !output! (
                 cd /d %_pathTools%
-                ::set pathLib=!pathLib! -I"!root:~0,-1!"
                 set fullpath= !pathLib! -I"!root:~0,-1!"
                 set compile=%_compiler-gcc% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I"%_pathBuildLib%" -I"!root:~0,-1!" !pathLib!"!source_c!" -o "!output!"
                 !compile!
                 echo build !source_c!
                 set static_lib=%_compiler-static-library% rcs "!Lstatic!" "!output!"
                 !static_lib!
-                echo !Lstatic!>>%_pathStaticConf%
                 cd /d %_pathCurrent%
             )
         )
@@ -215,7 +212,7 @@ set compile=%_compiler-g++% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions
 echo build !_pathSourceFile!
 
 if exist %_pathStaticConf% (
-    for /F "delims=" %%f in ('Type "%_pathStaticConf%"') do (
+    for /F "delims= tokens=1*" %%f in ('Type "%_pathStaticConf%"') do (
         set staticLink="%%f" !staticLink!
     )
 )
@@ -223,5 +220,6 @@ if exist %_pathStaticConf% (
 if exist %_pathSourceOut% (
     set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" !staticLink!%_pathStaticLibraryLib% %_pathStaticLibraryCore%
     !buildELF!
-    echo !buildELF!
+    ::echo !buildELF!
+    echo compile !_pathSourceOut!
 )

@@ -11,9 +11,9 @@ C:\Users\admin\Desktop\arduino_build\output\blinkled.cpp.o: \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
- C:\Users\admin\Desktop\arduino_build\inc\lib\Adafruit_Fingerprint/Adafruit_Fingerprint.h \
+ C:\Users\admin\Documents\Arduino\libraries\Adafruit_Fingerprint_Sensor_Library/Adafruit_Fingerprint.h \
  C:\Users\admin\Desktop\arduino_build\libraries/SoftwareSerial.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Stream.h \
  C:\Users\admin\Desktop\arduino_build\inc/add.h \
  C:\Users\admin\Desktop\arduino_build\inc/sub.h \
- C:\Users\admin\Desktop\arduino_build\inc\lib\RTCLib/RTClib.h
+ C:\Users\admin\Documents\Arduino\libraries\RTClib-master/RTClib.h
