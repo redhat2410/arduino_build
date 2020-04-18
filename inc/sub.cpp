@@ -1,5 +1,4 @@
 #include <sub.h>
-
 RTC_DS3231 rtc;
 int sub(int a, int b){
     if (!rtc.begin()){
