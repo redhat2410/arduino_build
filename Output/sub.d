@@ -12,4 +12,4 @@ C:\Users\admin\Desktop\arduino_build\output\sub.o: \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
- C:\Users\admin\Documents\Arduino\libraries\RTClib-master/RTClib.h
+ C:\Users\admin\Desktop\arduino_build\inc\lib\RTCLib/RTClib.h

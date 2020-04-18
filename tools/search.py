@@ -23,21 +23,29 @@ def searchHeader(source):
         os.remove(pathHeaderConf)
     if path.exists(pathIncludeConf):
         os.remove(pathIncludeConf)
+    sources = []
+    sources.append(source)
+    sources.append(searchCppFile(source))
     #process source file to get header name and write it to log file
-    if path.exists(source):
-        if source.find(".cpp") != -1 or source.find(".c") != -1 :
-            word_7 = Path(source).name.replace(".cpp",".h") if source.find(".cpp") else Path(source).name.replace(".c", ".h")
-        file = open(source, "r", encoding='utf-8')
-        for line in file:
-            if line.find(word) == 0 :
-                #get header name
-                result = line.split('<')
-                result = result[1].split('>')
-                if (result[0] != word_1) and (result[0] != word_2) and (result[0] != word_3) and (result[0] != word_4) and (result[0] != word_5) and (result[0] != word_6) and (result[0] != word_7) :
-                    writeFile(pathIncludeConf, result[0]+"\n")
-        file.close()       
-    else:
-        print("Error source file is not exist.")
+    for src in sources:
+        if path.exists(src):
+            if src.find(".cpp") != -1 or src.find(".c") != -1 :
+                word_7 = Path(src).name.replace(".cpp",".h") if src.find(".cpp") else Path(src).name.replace(".c", ".h")
+            file = open(src, "r", encoding='utf-8')
+            for line in file:
+                if line.find(word) == 0 :
+                    #get header name
+                    if line.find('<') != -1:
+                        result = line.split('<')
+                        result = result[1].split('>')
+                    else:
+                        result = line.split('"')
+                        result = result[1].split('"')
+                    if (result[0] != word_1) and (result[0] != word_2) and (result[0] != word_3) and (result[0] != word_4) and (result[0] != word_5) and (result[0] != word_6) and (result[0] != word_7) :
+                        writeFile(pathIncludeConf, result[0]+"\n")
+            file.close()       
+        else:
+            print("Error source file is not exist.")
 
 def writeFile(filename, data):
     if path.exists(filename) :
@@ -96,6 +104,22 @@ def searchPathHeader():
     else:
         print("Writing " + pathHeaderConf + " failed.")
 
+
+# Hàm searchCppFile có chức năng tìm file .cpp nếu path source là file .h
+# @param source: đường dẫn file
+# @return 
+def searchCppFile(header):
+    filename = Path(header).name
+    direction= path.dirname(path.abspath(header))
+    extension = [".cpp", ".c"]
+    t_path = ""
+    if filename.find('.h') != -1 :
+        for ext in extension:
+            filesource = filename.replace('.h', ext)
+            for root, dirs, files in os.walk(direction+'\\'):
+                if filesource in files:
+                    t_path = os.path.join(root, filesource)
+    return t_path
 
 if len(sys.argv) > 1:
     searchHeader(sys.argv[1])

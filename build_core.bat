@@ -63,7 +63,7 @@ set _pathConf=!_pathArduino!\hardware\tools\avr/etc/avrdude.conf
 set _pathLibraries="C:\Users\admin\Documents\Arduino\libraries"
 ::ghi dường dẫn vào file conf
 if exist %_pathPathFileConf% ( del %_pathPathFileConf% )
-echo %_pathLibraries%>>%_pathPathFileConf%
+:: echo %_pathLibraries%>>%_pathPathFileConf%
 echo %_pathBuildInc%>>%_pathPathFileConf%
 
 :: Macro tools search
@@ -339,6 +339,7 @@ if %ask%==Y (
 goto :eof
 
 :YES
+
 ::Nhập tên cổng COM
 set /p port=Enter port name:
 for /f "delims=" %%f in ('mode %port%') do (
