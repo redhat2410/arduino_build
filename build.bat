@@ -75,9 +75,39 @@ set _compiler-static-library=avr-gcc-ar
 set _compiler-hex=avr-objcopy
 set _compiler-upload=avrdude
 :: Macro option for compiler
-set _opt-mcu=atmega328p
+set _opt-mcu-328=atmega328p
 set _opt-frq-16M=16000000L
+set _opt-frq-8M=8000000L
+set _opt-baud_115200=115200
+set _opt-baud_57600=57600
 :: Macro option for upload
+
+echo Please choose Arduino
+echo 1. ARDUINO UNO
+echo 2. ARDUINO PRO MINI
+echo 3. ARDUINO NANO
+
+set /p choose=Enter number: 
+
+if %choose% == 1 (
+    echo You choose board Arduino Uno.
+    set _opt-mcu=%_opt-mcu-328%
+    set _opt-frq=%_opt-frq-16M%
+    set _opt-baud=%_opt-baud_115200%
+) else if %choose% == 2 (
+    echo You choose board Arduino Pro Mini.
+    set _opt-mcu=%_opt-mcu-328%
+    set _opt-frq=%_opt-frq-8M%
+    set _opt-baud=%_opt-baud_57600%
+) else if %choose% == 3 (
+    echo You choose board Arduino Nano
+    set _opt-mcu=%_opt-mcu-328%
+    set _opt-frq=%_opt-frq-16M%
+    set _opt-baud=%_opt-baud_57600%
+) else (
+    echo No board.
+    goto :UNSUCCESS
+)
 
 
 
@@ -87,7 +117,7 @@ cd /d%_pathTools%
 for %%f in (%_pathCore%\*".s") do (
     set pathFile_asm=%%f
     set pathOut_asm=%_pathBuildCore%\%%~nxf.o
-    set exec_asm=%_compiler-gcc% -c -g -x assembler-with-cpp -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -I%_pathCore% -I%_pathVariant% "!pathFile_asm!" -o "!pathOut_asm!"
+    set exec_asm=%_compiler-gcc% -c -g -x assembler-with-cpp -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -I%_pathCore% -I%_pathVariant% "!pathFile_asm!" -o "!pathOut_asm!"
     !exec_asm!
     set exec_ar_asm=%_compiler-static-library% rcs "%_pathStaticLibraryCore%" "!pathOut_asm!"
     !exec_ar_asm!
@@ -98,7 +128,7 @@ for %%f in (%_pathCore%\*".s") do (
 for %%f in (%_pathCore%\*".c") do (
     set pathFile_gcc=%%f
     set pathOut_gcc=%_pathBuildCore%\%%~nxf.o
-    set exec_gcc=%_compiler-gcc% -c -g -Os -w -std=gnu11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -I%_pathCore% -I%_pathVariant% "!pathFile_gcc!" -o "!pathOut_gcc!"
+    set exec_gcc=%_compiler-gcc% -c -g -Os -w -std=gnu11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -I%_pathCore% -I%_pathVariant% "!pathFile_gcc!" -o "!pathOut_gcc!"
     !exec_gcc!
     set exec_ar_gcc=%_compiler-static-library% rcs "%_pathStaticLibraryCore%" "!pathOut_gcc!"
     !exec_ar_gcc!
@@ -109,7 +139,7 @@ for %%f in (%_pathCore%\*".c") do (
 for %%f in (%_pathCore%\*".cpp") do (
     set pathFile_g++=%%f
     set pathOut_g++=%_pathBuildCore%\%%~nxf.o
-    set exec_g++=%_compiler-g++% -c -g -Os -w -std=gnu++11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -I%_pathCore% -I%_pathVariant% "!pathFile_g++!" -o "!pathOut_g++!"
+    set exec_g++=%_compiler-g++% -c -g -Os -w -std=gnu++11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -I%_pathCore% -I%_pathVariant% "!pathFile_g++!" -o "!pathOut_g++!"
     !exec_g++!
     set exec_ar_g++=%_compiler-static-library% rcs "%_pathStaticLibraryCore%" "!pathOut_g++!"
     !exec_ar_g++!
@@ -132,7 +162,7 @@ for /d %%f in (%_pathLibrary%\*) do (
     for %%r in ("!_pathRoot!"\src\*.cpp) do (
         set pathSource=%%r
         set pathSourceOut=%_pathBuildLib%\%%~nxr.o
-        set _exec=%_compiler-g++% -c -g -Os -w -std=gnu++11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -I%_pathCore% -I%_pathVariant% -I"!_pathRoot!\src" "!pathSource!" -o "!pathSourceOut!"
+        set _exec=%_compiler-g++% -c -g -Os -w -std=gnu++11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -I%_pathCore% -I%_pathVariant% -I"!_pathRoot!\src" "!pathSource!" -o "!pathSourceOut!"
         !_exec!
         set _static=%_compiler-static-library% rcs %_pathStaticLibraryLib% "!pathSourceOut!"
         !_static!
@@ -150,7 +180,7 @@ for /d %%f in (%_pathLibrary%\*) do (
         for %%d in ("!_pathDir!"\*.c) do (
             set pathSource=%%d
             set pathSourceOut=%_pathBuildLib%\%%~nxd.o
-            set _exec=%_compiler-gcc% -c -g -Os -w -std=gnu11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -I%_pathCore% -I%_pathVariant% "!pathSource!" -o "!pathSourceOut!" 
+            set _exec=%_compiler-gcc% -c -g -Os -w -std=gnu11 -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -I%_pathCore% -I%_pathVariant% "!pathSource!" -o "!pathSourceOut!" 
             !_exec!
             set _static=%_compiler-static-library% rcs %_pathStaticLibraryLib% "!pathSourceOut!"
             !_static!
@@ -211,7 +241,7 @@ if exist %_pathHeaderFileConf% if exist %_pathIncludeConf% (
                         set output=%_pathBuildOut%\%%~nxd.o
                         if not exist !output! (
                             echo !root!>>%_pathBackupLibConf%                        
-                            set compile=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!root!" "!source!" -o "!output!"
+                            set compile=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!root!" "!source!" -o "!output!"
                             cd /d %_pathTools%
                             !compile!
                             echo build !source!
@@ -224,7 +254,7 @@ if exist %_pathHeaderFileConf% if exist %_pathIncludeConf% (
                         set output=%_pathBuildOut%\%%~nxd.o
                         if not exist !output! (        
                             echo !root!>>%_pathBackupLibConf%                 
-                            set compile=%_compiler-gcc% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!root!" "!source!" -o "!output!"
+                            set compile=%_compiler-gcc% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!root!" "!source!" -o "!output!"
                             cd /d %_pathTools%
                             !compile!
                             echo build !source!
@@ -271,7 +301,7 @@ if exist %_pathBackupIncConf% (
             if not exist !output! (
                 cd /d %_pathTools%
                 set fullpath= !pathLib!-I"!root:~0,-1!"
-                set compile=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I"%_pathBuildLib%" -I"!root:~0,-1!" !pathLib!"!source_cpp!" -o "!output!" 
+                set compile=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I"%_pathBuildLib%" -I"!root:~0,-1!" !pathLib!"!source_cpp!" -o "!output!" 
                 !compile!
                 echo build !source_cpp!
                 set static_lib=%_compiler-static-library% rcs "!Lstatic!" "!output!"
@@ -283,7 +313,7 @@ if exist %_pathBackupIncConf% (
             if not exist !output! (
                 cd /d %_pathTools%
                 set fullpath= !pathLib! -I"!root:~0,-1!"
-                set compile=%_compiler-gcc% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I"%_pathBuildLib%" -I"!root:~0,-1!" !pathLib!"!source_c!" -o "!output!"
+                set compile=%_compiler-gcc% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I"%_pathBuildLib%" -I"!root:~0,-1!" !pathLib!"!source_c!" -o "!output!"
                 !compile!
                 echo build !source_c!
                 set static_lib=%_compiler-static-library% rcs "!Lstatic!" "!output!"
@@ -294,7 +324,7 @@ if exist %_pathBackupIncConf% (
     )
 )
 cd /d %_pathTools%
-set compile=%_compiler-g++% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq-16M% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% !fullpath! "!_pathSourceFile!" -o "!_pathSourceOut!"
+set compile=%_compiler-g++% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% !fullpath! "!_pathSourceFile!" -o "!_pathSourceOut!"
 !compile!
 echo build !_pathSourceFile!
 
@@ -352,7 +382,7 @@ if "!status!"=="%result%" (
     goto :UNSUCCESS
 ) else (
     ::nếu cổng COM vaild thực hiện upload
-    set upload=%_compiler-upload% -C%_pathConf% -v -p%_opt-mcu% -carduino -P%port% -b115200 -D -Uflash:w:"!_pathSourceHEX!":i
+    set upload=%_compiler-upload% -C%_pathConf% -v -p%_opt-mcu% -carduino -P%port% -b%_opt-baud% -D -Uflash:w:"!_pathSourceHEX!":i
     !upload!
     echo Upload done !!!
 )

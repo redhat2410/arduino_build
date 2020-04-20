@@ -1,6 +1,5 @@
-C:\Users\admin\Desktop\arduino_build\output\sub.o: \
- C:\Users\admin\Desktop\arduino_build\inc\sub.cpp \
- C:\Users\admin\Desktop\arduino_build\inc/sub.h \
+C:\Users\admin\Desktop\arduino_build\output\Timer.o: \
+ C:\Users\admin\Desktop\arduino_build\inc\Timer.cpp \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \
@@ -12,4 +11,4 @@ C:\Users\admin\Desktop\arduino_build\output\sub.o: \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
- C:\Users\admin\Desktop\arduino_build\inc\lib\RTCLib/RTClib.h
+ C:\Users\admin\Desktop\arduino_build\inc\Timer.h

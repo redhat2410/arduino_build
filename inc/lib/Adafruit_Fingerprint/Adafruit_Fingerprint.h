@@ -71,8 +71,6 @@
 #define FINGERPRINT_HISPEEDSEARCH 0x1B
 #define FINGERPRINT_TEMPLATECOUNT 0x1D
 
-#define FINGERPRINT_LEDON   0x50
-#define FINGERPRINT_LEDOFF  0x51
 //#define FINGERPRINT_DEBUG
 
 #define DEFAULTTIMEOUT 1000  ///< UART reading timeout in milliseconds
@@ -132,8 +130,6 @@ class Adafruit_Fingerprint {
   uint8_t setPassword(uint32_t password);
   void writeStructuredPacket(const Adafruit_Fingerprint_Packet & p);
   uint8_t getStructuredPacket(Adafruit_Fingerprint_Packet * p, uint16_t timeout=DEFAULTTIMEOUT);
-  uint8_t ledOn(void);
-  uint8_t ledOff(void);
 
   /// The matching location that is set by fingerFastSearch()
   uint16_t fingerID;

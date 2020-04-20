@@ -1,6 +1,5 @@
-C:\Users\admin\Desktop\arduino_build\output\Adafruit_Fingerprint.cpp.o: \
- C:\Users\admin\Desktop\arduino_build\inc\lib\Adafruit_Fingerprint\Adafruit_Fingerprint.cpp \
- C:\Users\admin\Desktop\arduino_build\inc\lib\Adafruit_Fingerprint\Adafruit_Fingerprint.h \
+C:\Users\admin\Desktop\arduino_build\output\WorkScheduler.o: \
+ C:\Users\admin\Desktop\arduino_build\inc\WorkScheduler.cpp \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/binary.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/WCharacter.h \
@@ -12,5 +11,5 @@ C:\Users\admin\Desktop\arduino_build\output\Adafruit_Fingerprint.cpp.o: \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
- C:\Users\admin\Desktop\arduino_build\libraries/SoftwareSerial.h \
- C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Stream.h
+ C:\Users\admin\Desktop\arduino_build\inc\Timer.h \
+ C:\Users\admin\Desktop\arduino_build\inc\WorkScheduler.h

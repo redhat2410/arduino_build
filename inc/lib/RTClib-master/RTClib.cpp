@@ -604,7 +604,7 @@ void RTC_DS1307::adjust(const DateTime& dt) {
   Wire._I2C_WRITE(bin2bcd(0));
   Wire._I2C_WRITE(bin2bcd(dt.day()));
   Wire._I2C_WRITE(bin2bcd(dt.month()));
-  Wire._I2C_WRITE(bin2bcd(dt.year() - 2000));
+  Wire._I2C_WRITE(bin2bcd(dt.year() % 1000));
   Wire.endTransmission();
 }
 
@@ -619,7 +619,7 @@ DateTime RTC_DS1307::now() {
   Wire._I2C_WRITE((byte)0);
   Wire.endTransmission();
 
-  Wire.requestFrom(DS1307_ADDRESS, 7);
+  Wire.requestFrom(DS1307_ADDRESS, 8);
   uint8_t ss = bcd2bin(Wire._I2C_READ() & 0x7F);
   uint8_t mm = bcd2bin(Wire._I2C_READ());
   uint8_t hh = bcd2bin(Wire._I2C_READ());
@@ -627,6 +627,9 @@ DateTime RTC_DS1307::now() {
   uint8_t d = bcd2bin(Wire._I2C_READ());
   uint8_t m = bcd2bin(Wire._I2C_READ());
   uint16_t y = bcd2bin(Wire._I2C_READ()) + 2000;
+
+  Serial.print("Year: ");
+  Serial.println(y);
 
   return DateTime (y, m, d, hh, mm, ss);
 }
@@ -979,7 +982,7 @@ void RTC_DS3231::adjust(const DateTime& dt) {
   Wire._I2C_WRITE(bin2bcd(0));
   Wire._I2C_WRITE(bin2bcd(dt.day()));
   Wire._I2C_WRITE(bin2bcd(dt.month()));
-  Wire._I2C_WRITE(bin2bcd(dt.year() - 2000));
+  Wire._I2C_WRITE(bin2bcd(dt.year() % 1000));
   Wire.endTransmission();
 
   uint8_t statreg = read_i2c_register(DS3231_ADDRESS, DS3231_STATUSREG);

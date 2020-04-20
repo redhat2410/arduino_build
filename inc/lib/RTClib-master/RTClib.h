@@ -63,7 +63,7 @@ public:
       @brief  Return the year, stored as an offset from 2000
       @return uint16_t year
   */
-  uint16_t year() const       { return 2000 + yOff; }
+  uint16_t year() const       { return yOff; }
   /*!
       @brief  Return month
       @return uint8_t month
