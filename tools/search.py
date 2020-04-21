@@ -42,7 +42,19 @@ def searchHeader(source):
                         result = line.split('"')
                         result = result[1].split('"')
                     if (result[0] != word_1) and (result[0] != word_2) and (result[0] != word_3) and (result[0] != word_4) and (result[0] != word_5) and (result[0] != word_6) and (result[0] != word_7) :
-                        writeFile(pathIncludeConf, result[0]+"\n")
+                        if path.exists(pathIncludeConf):
+                            file = open(pathIncludeConf, "r", encoding='utf-8')
+                            isFind = False
+                            for line in file:
+                                if line.find(result[0]) != -1:
+                                    isFind = True
+                                    break
+                                isFind = False                            
+                            if not isFind:
+                                writeFile(pathIncludeConf, result[0] + "\n")
+                            file.close()
+                        else:
+                            writeFile(pathIncludeConf, result[0] + "\n")
             file.close()       
         else:
             print("Error source file is not exist.")
@@ -97,7 +109,21 @@ def searchPathHeader():
         for t_name in headerName:
             for root, dirs, files in os.walk(t_path):
                 if t_name in files:
-                    writeFile(pathHeaderConf, root + "\n")
+                    #writeFile(pathHeaderConf, root + "\n")
+                    if path.exists(pathHeaderConf):
+                        file = open(pathHeaderConf, "r", encoding='utf-8')
+                        isFind = False
+                        for line in file:
+                            if line.find(root) != -1:
+                                isFind = True
+                                break
+                            isFind = False
+                        
+                        if not isFind:
+                            writeFile(pathHeaderConf, root + "\n")
+                        file.close()
+                    else:
+                        writeFile(pathHeaderConf, root + "\n")
     
     if path.exists(pathHeaderConf):
         print("Writing " + pathHeaderConf + " done.")

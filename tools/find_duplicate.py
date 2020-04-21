@@ -13,9 +13,10 @@ def duplicate(conf, data):
             isFind = False
         
         if not isFind:
-            writeFile(conf, data)
+            writeFile(conf, data + "\n")
+        file.close()
     else:
-        print("Error configure file is not exist.")
+        writeFile(conf, data + "\n")
 
 
 def writeFile(filename, data):
@@ -27,3 +28,9 @@ def writeFile(filename, data):
         file = open(filename, "w")
         file.writelines(data)
         file.close()
+
+
+if len(sys.argv) > 1:
+    duplicate(sys.argv[1], sys.argv[2])
+else:
+    print("Error no input configure file.")

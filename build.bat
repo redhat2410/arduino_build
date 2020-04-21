@@ -68,6 +68,7 @@ echo %_pathBuildInc%>>%_pathPathFileConf%
 
 :: Macro tools search
 set _tools_search=tools\search
+set _tools_duplicate=tools\find_duplicate
 :: Macro compiler
 set _compiler-gcc=avr-gcc
 set _compiler-g++=avr-g++
@@ -216,6 +217,7 @@ if exist %_pathTempConf% ( del %_pathTempConf% )
 ::thực hiện search header trong file .cpp
 
 set toolsSearch=%_tools_search% !_pathSourceFile!
+echo search !_pathSourceFile!
 !toolsSearch!
 ::thực hiện phân loại các các thư viện trong file thư mục /inc và thư mục /lib
 ::Phân loại các thư viện trong /lib để build trước
@@ -231,9 +233,12 @@ if exist %_pathHeaderFileConf% if exist %_pathIncludeConf% (
             set pathFile=!root!\!files!
             if exist !pathFile! (
                 if !root! == %_pathBuildInc% (
-                    echo !pathFile!>>%_pathTempConf%
-                    echo !pathFile!>>%_pathBackupIncConf%
-                    echo %_pathBuildOut%\%%~nf.o>>%_pathStaticConf%
+                    set writeConf=%_tools_duplicate% %_pathTempConf% !pathFile!
+                    !writeConf!
+                    set writeConf=%_tools_duplicate% %_pathBackupIncConf% !pathFile!
+                    !writeConf!
+                    set writeConf=%_tools_duplicate% %_pathStaticConf% %_pathBuildOut%\%%~nf.o
+                    !writeConf!
                 ) else (
                     ::build lib
                     for %%d in (!root!\*.cpp) do (
@@ -267,12 +272,14 @@ if exist %_pathHeaderFileConf% if exist %_pathIncludeConf% (
         )
     )
 )
+
 ::Cần file search file .h và file .c/.cpp
 if exist %_pathTempConf% (
-    for /F "delims=" %%f in ('Type "%_pathTempConf%"') do (
+    for /F "delims=" %%f in ('Type "%_pathTempConf%"') do (        
         set toolsSearch=%_tools_search% %%f
         !toolsSearch!
-        echo !toolsSearch!
+        echo search %%f
+        if exist %_pathHeaderFileConf% ( goto :LOOP )
     )
 ) else (
     goto :EXT_LOOP
