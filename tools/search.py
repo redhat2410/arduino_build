@@ -12,7 +12,7 @@ pathIncludeConf = "tools\\etc\\includes.conf"
 def searchHeader(source):
     word = "#include"
     word_1 = "Arduino.h"
-    word_2 = "Software.h"
+    word_2 = "SoftwareSerial.h"
     word_3 = "Wire.h"
     word_4 = "SPI.h"
     word_5 = "HID.h"
