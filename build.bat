@@ -231,15 +231,19 @@ if exist %_pathBackupLibConf% (
         for %%f in (!root!\*.cpp) do (
             set sourceLib=%%f
             set outputLib=%_pathBuildOut%\%%~nxf.o
+            cd /d %_pathTools%
             set build=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!root!" "!sourceLib!" -o "!outputLib!"
             !build!
+            cd /d %_pathCurrent%
             echo build !sourceLib!
         )
         for %%f in (!root!\*.c) do (
             set sourceLib=%%f
             set outputLib=%_pathBuildOut%\%%~nxf.o
+            cd /d %_pathTools%
             set build=%_compiler-gcc% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!root!" "!sourceLib!" -o "!outputLib!"
             !build!
+            cd /d %_pathCurrent%
             echo build !sourceLib!
         )
     )
@@ -250,14 +254,29 @@ if exist %_pathBackupIncConf% (
         set sourceInc=%%f
         set outputInc=%_pathBuildOut%\%%~nxf.o
         set extension=%%~xf
-        if %extension% == .cpp (
-            set build=%_compiler-g++% 
+        set root=%%~df%%~pf
+        if !extension! ==.cpp (
+            cd /d %_pathTools%
+            set build=%_compiler-g++% -c -g -Os -w -std=gnu++11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!root:~0,-1!" !pathLib! "!sourceInc!" -o "!outputInc!" 
+            !build!
+            cd /d %_pathCurrent%
+            echo build !sourceInc!
         )
+        if !extension! ==.c (
+            cd /d %_pathTools%
+            set build=%_compiler-gcc% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!root:~0,-1!" !pathLib! "!sourceInc!" -o "!outputInc!" 
+            !build!
+            cd /d %_pathCurrent%
+            echo build !sourceInc!
+        )        
     )
 )
 
-
-
+if exist %_pathIncludeConf% (
+    for /F "delims=" %%f in ('Type "%_pathIncludeConf%"') do (
+        set pathInc=-I"%%f" !pathInc!
+    )
+)
 REM :LOOP
 REM if exist %_pathHeaderFileConf% if exist %_pathIncludeConf% (
 REM     for /F "delims=" %%r in ('Type "%_pathHeaderFileConf%"') do (
@@ -367,9 +386,9 @@ REM )
 
 
 cd /d %_pathTools%
-set compile=%_compiler-g++% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% !fullpath! "!_pathSourceFile!" -o "!_pathSourceOut!"
+set compile=%_compiler-g++% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% !pathLib! !pathInc! "!_pathSourceFile!" -o "!_pathSourceOut!"
 !compile!
-echo build !_pathSourceFile!
+echo build !compile!
 
 if exist %_pathStaticConf% (
     for /F "delims= tokens=1*" %%f in ('Type "%_pathStaticConf%"') do (

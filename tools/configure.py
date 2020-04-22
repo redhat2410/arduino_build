@@ -6,6 +6,7 @@ import sys
 
 pathBackupInc= "tools\\etc\\backupInc.conf"
 pathBackupLib= "tools\\etc\\backupLib.conf"
+pathIncludeConf="tools\\etc\\includes.conf"
 pathIncludes = "inc\\"
 pathIncludesLib = "inc\\lib\\"
 headerNameInc = []
@@ -71,6 +72,8 @@ def searchPath():
                 if name in file:
                     if not isExist(headerFullPath, os.path.join(root, name)):
                         headerFullPath.append(os.path.join(root, name))
+                    if not isExist(headerPath, root):
+                        headerPath.append(root)
 
 # Hàm searchCppFile thực hiện tìm file .cpp từ file header
 # @param source: đường dẫn file header
@@ -104,6 +107,8 @@ def process(source):
         os.remove(pathBackupInc)
     if path.exists(pathBackupLib):
         os.remove(pathBackupLib)
+    if path.exists(pathIncludeConf):
+        os.remove(pathIncludeConf)
 
     search(source)
     searchPath()
@@ -121,10 +126,18 @@ def process(source):
         else:
             headerFullPathInc.append(searchCppFile(full))
 
+    t_headerPath = []
+    for full in headerPath:
+        if full.find(path.abspath(pathIncludesLib)) == -1:
+            t_headerPath.append(full)
+
     for headerInc in headerFullPathInc:
         writeFile(pathBackupInc, headerInc + "\n" )
     for headerLib in headerFullPathLib:
         writeFile(pathBackupLib, headerLib + "\n" )
+    for head in t_headerPath:
+        writeFile(pathIncludeConf, head + "\n" )
+    print("Write configure done.")
 
 
 if len(sys.argv) > 1:
