@@ -7,6 +7,7 @@ import sys
 pathBackupInc= "tools\\etc\\backupInc.conf"
 pathBackupLib= "tools\\etc\\backupLib.conf"
 pathIncludeConf="tools\\etc\\includes.conf"
+pathHeaderConf="tools\\etc\\header.conf"
 pathIncludes = "inc\\"
 pathIncludesLib = "inc\\lib\\"
 headerNameInc = []
@@ -130,6 +131,14 @@ def process(source):
     for full in headerPath:
         if full.find(path.abspath(pathIncludesLib)) == -1:
             t_headerPath.append(full)
+
+    for header in headerFullPath:
+        if header.find( path.abspath(pathIncludesLib) ) != -1:
+            temp = header.replace(".h", ".o")
+            writeFile(pathHeaderConf, temp + "\n")
+        else :
+            temp = header.replace(".h", ".a")
+            writeFile(pathHeaderConf, temp + "\n")
 
     for headerInc in headerFullPathInc:
         writeFile(pathBackupInc, headerInc + "\n" )

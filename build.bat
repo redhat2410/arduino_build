@@ -398,11 +398,13 @@ set compile=%_compiler-g++% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions
 !compile!
 echo build !compile!
 
-if exist %_pathStaticConf% (
-    for /F "delims= tokens=1*" %%f in ('Type "%_pathStaticConf%"') do (
+if exist %_pathHeaderFileConf% (
+    for /F "delims= tokens=1*" %%f in ('Type "%_pathHeaderFileConf%"') do (
         set staticLink="%%f" !staticLink!
     )
 )
+
+echo !staticLink!
 
 if exist %_pathSourceOut% (
     set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" !staticLink!%_pathStaticLibraryLib% %_pathStaticLibraryCore%
