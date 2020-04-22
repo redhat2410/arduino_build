@@ -245,6 +245,16 @@ if exist %_pathBackupLibConf% (
     )
 )
 
+if exist %_pathBackupIncConf% (
+    for /F "delims=" %%f in ('Type "%_pathBackupIncConf%"') do (
+        set sourceInc=%%f
+        set outputInc=%_pathBuildOut%\%%~nxf.o
+        set extension=%%~xf
+        if %extension% == .cpp (
+            set build=%_compiler-g++% 
+        )
+    )
+)
 
 
 
