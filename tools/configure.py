@@ -10,6 +10,7 @@ pathIncludeConf="tools\\etc\\includes.conf"
 pathHeaderConf="tools\\etc\\header.conf"
 pathIncludes = "inc\\"
 pathIncludesLib = "inc\\lib\\"
+pathOutput = "output\\"
 headerNameInc = []
 headerNameLib = []
 headerPath = []
@@ -110,6 +111,8 @@ def process(source):
         os.remove(pathBackupLib)
     if path.exists(pathIncludeConf):
         os.remove(pathIncludeConf)
+    if path.exists(pathHeaderConf):
+        os.remove(pathHeaderConf)
 
     search(source)
     searchPath()
@@ -135,6 +138,8 @@ def process(source):
     for header in headerFullPath:
         if header.find( path.abspath(pathIncludesLib) ) != -1:
             temp = header.replace(".h", ".o")
+            temp = Path(temp).name
+            temp = os.path.join(path.abspath(pathOutput), temp)
             writeFile(pathHeaderConf, temp + "\n")
         else :
             temp = header.replace(".h", ".a")
