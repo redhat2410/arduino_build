@@ -29,7 +29,7 @@ def isExist(List, find):
 # Hàm search sẽ tìm kiếm tất cả các file header có liên qua tới file source
 # @param source: file nguồn 
 # @param none
-def search(source):
+def search(source, mode):
     #define word compare
     word = "#include"
     word_1 = "Arduino.h"
@@ -56,9 +56,14 @@ def search(source):
                     result = line.split('"')
                     result = result[1].split('"')
                 #ignore header special
-                if (result[0] != word_1) and (result[0] != word_2) and (result[0] != word_3) and (result[0] != word_4) and (result[0] != word_5) and (result[0] != word_6) and (result[0] != word_7) :
-                    if not isExist(headerNameInc, result[0]):
-                        headerNameInc.append(result[0])
+                if mode == "AVR" :
+                    if (result[0] != word_1) and (result[0] != word_2) and (result[0] != word_3) and (result[0] != word_4) and (result[0] != word_5) and (result[0] != word_6) and (result[0] != word_7) :
+                        if not isExist(headerNameInc, result[0]):
+                            headerNameInc.append(result[0])
+                else:
+                    if result[0] != word_7:
+                        if not isExist(headerNameInc, result[0]):
+                            headerNameInc.append(result[0])
         file.close()
     else:
         print("Error source file is not exist.")
@@ -103,7 +108,7 @@ def writeFile(filename, data):
         file.writelines(data)
         file.close()
 
-def process(source):
+def process(source, mode):
 
     if path.exists(pathBackupInc):
         os.remove(pathBackupInc)
@@ -114,14 +119,14 @@ def process(source):
     if path.exists(pathHeaderConf):
         os.remove(pathHeaderConf)
 
-    search(source)
+    search(source, mode)
     searchPath()
 
     for full in headerFullPath:
-        search(full)
+        search(full, mode)
         pathsrc = searchCppFile(full)
         if pathsrc != "" :
-            search(pathsrc)
+            search(pathsrc, mode)
     searchPath()
 
     for full in headerFullPath:
@@ -137,12 +142,12 @@ def process(source):
 
     for header in headerFullPath:
         if header.find( path.abspath(pathIncludesLib) ) != -1:
-            temp = header.replace(".h", ".o")
+            temp = searchCppFile(header) + ".o"
             temp = Path(temp).name
             temp = os.path.join(path.abspath(pathOutput), temp)
             writeFile(pathHeaderConf, temp + "\n")
         else :
-            temp = header.replace(".h", ".a")
+            temp = searchCppFile(header) + ".a"
             writeFile(pathHeaderConf, temp + "\n")
 
     for headerInc in headerFullPathInc:
@@ -155,6 +160,6 @@ def process(source):
 
 
 if len(sys.argv) > 1:
-    process(sys.argv[1])
+    process(sys.argv[1], sys.argv[2])
 else:
     print("Error no input source file.")
