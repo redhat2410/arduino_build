@@ -63,7 +63,7 @@ for %%f in (%_pathBuildLib%\*) do (
 ::Kiểm tra file path.conf có tồn tại nếu tồn tại thì không cần hỏi đường dẫn arduino
 ::nếu file ko tồn tại thực hiện hỏi đường dẫn arduino và ghi lại file
 
-set _pathArduino="C:\Users\admin\AppData\Local\Arduino15\packages\esp8266"
+set _pathArduino="C:\Users\ducvu\AppData\Local\Arduino15\packages\esp8266"
 
 :DEFINE_PATH
 :: Macro path file
@@ -95,13 +95,14 @@ set _compiler-gcc=xtensa-lx106-elf-gcc
 set _compiler-g++=xtensa-lx106-elf-g++
 set _compiler-static-library=xtensa-lx106-elf-ar
 set _compiler-hex=xtensa-lx106-elf-objcopy
-set _compiler-upload=tools\esptool\0.4.12\esptool
+set _compiler-upload=%_pathArduino%\tools\esptool\0.4.12\esptool
+
 
 cd /d %_pathTools%
 for %%f in (%_pathCore%\*.s) do (
     set source=%%f
     set output=%_pathBuildCore%\%%~nxf.o
-    set build=%_compiler-gcc% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -g -x assembler-with-cpp -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DF_CRYSTAL=40000000 -DESP8266 -I%_pathCore% -I%_pathVariant% "!source!" -o "!output!"
+    set build=%_compiler-gcc% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -g -x assembler-with-cpp -MMD -mlongcalls -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DF_CRYSTAL=40000000 -DESP8266 -I%_pathCore% -I%_pathVariant% "!source!" -o "!output!"
     !build!
     set static=%_compiler-static-library% cru %_pathStaticLibraryCore% "!output!"
     !static!
@@ -111,17 +112,7 @@ for %%f in (%_pathCore%\*.s) do (
 for %%f in (%_pathCore%\*.c) do (
     set source=%%f
     set output=%_pathBuildCore%\%%~nxf.o
-    set build=%_compiler-gcc% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -std=gnu11 -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DF_CRYSTAL=40000000 -DESP8266 -I%_pathCore% -I%_pathVariant% "!source!" -o "!output!"
-    !build!
-    set static=%_compiler-static-library% cru %_pathStaticLibraryCore% "!output!"
-    !static!
-    echo compile static library !output!
-)
-
-for %%f in (%_pathCore%\*.cpp) do (
-    set source=%%f
-    set output=%_pathBuildCore%\%%~nxf.o
-    set build=%_compiler-gcc% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -std=gnu++11 -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DF_CRYSTAL=40000000 -DESP8266 -I%_pathCore% -I%_pathVariant% "!source!" -o "!output!"
+    set build=%_compiler-gcc% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -Wpointer-arith -Wno-implicit-function-declaration -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -falign-functions=4 -MMD -std=gnu99 -ffunction-sections -fdata-sections -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DESP8266 -I%_pathCore% -I%_pathVariant% "!source!" -o "!output!"
     !build!
     set static=%_compiler-static-library% cru %_pathStaticLibraryCore% "!output!"
     !static!
@@ -136,16 +127,34 @@ for /D %%d in (%_pathCore%\*) do (
     for %%f in (!root!\*.c) do (
         set source=%%f
         set output=!dir!\%%~nxf.o
-        set build=%_compiler-gcc% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -std=gnu11 -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DF_CRYSTAL=40000000 -DESP8266 -I%_pathCore% -I%_pathVariant% "!source!" -o "!output!"
+        set build=%_compiler-gcc% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -Wpointer-arith -Wno-implicit-function-declaration -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -falign-functions=4 -MMD -std=gnu99 -ffunction-sections -fdata-sections -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DESP8266 -I%_pathCore% -I%_pathVariant% "!source!" -o "!output!"
         !build!
+        set static=%_compiler-static-library% cru "%_pathStaticLibraryCore%" "!output!"
+        !static!
+        echo compile static library !output!
     )
     for %%f in (!root!\*.cpp) do (
         set source=%%f
         set output=!dir!\%%~nxf.o
-        set build=%_compiler-g++% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -std=gnu++11 -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DF_CRYSTAL=40000000 -DESP8266 -I%_pathCore% -I%_pathVariant% "!source!" -o "!output!"
+        set build=%_compiler-g++% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -mlongcalls -mtext-section-literals -fno-exceptions -fno-rtti -falign-functions=4 -std=c++11 -MMD -ffunction-sections -fdata-sections -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DESP8266 -I%_pathCore% -I%_pathVariant% "!source!" -o "!output!"
         !build!
+        set static=%_compiler-static-library% cru "%_pathStaticLibraryCore%" "!output!"
+        !static!
+        echo compile static library !output!
     )
 )
+
+for %%f in (%_pathCore%\*.cpp) do (
+    set source=%%f
+    set output=%_pathBuildCore%\%%~nxf.o
+    set build=%_compiler-g++% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -mlongcalls -mtext-section-literals -fno-exceptions -fno-rtti -falign-functions=4 -std=c++11 -MMD -ffunction-sections -fdata-sections -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DESP8266 -I%_pathCore% -I%_pathVariant% "!source!" -o "!output!"
+    !build!
+    set static=%_compiler-static-library% cru %_pathStaticLibraryCore% "!output!"
+    !static!
+    echo compile static library !output!
+)
+
+
 
 if exist %_pathBackupIncConf% ( del %_pathBackupIncConf% )
 if exist %_pathBackupLibConf% ( del %_pathBackupLibConf% )
@@ -179,7 +188,7 @@ if exist %_pathBackupLibConf% (
             set outputLib=%_pathBuildOut%\%%~nxf.o
             echo !outputLib!>>%_pathStaticConf%
             cd /d %_pathTools%
-            set build=%_compiler-g++% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -std=gnu++11 -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DF_CRYSTAL=40000000 -DESP8266 -I%_pathCore% -I%_pathVariant% !pathlibraries! -I"!root!" "!sourceLib!" -o "!outputLib!"
+            set build=%_compiler-g++% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -mlongcalls -mtext-section-literals -fno-exceptions -fno-rtti -falign-functions=4 -std=c++11 -MMD -ffunction-sections -fdata-sections -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DESP8266 -I%_pathCore% -I%_pathVariant% !pathlibraries! -I"!root!" "!sourceLib!" -o "!outputLib!"
             !build!
             echo build !sourceLib!
             cd /d %_pathCurrent%
@@ -189,7 +198,7 @@ if exist %_pathBackupLibConf% (
             set outputLib=%_pathBuildOut%\%%~nxf.o
             echo !outputLib!>>%_pathStaticConf%
             cd /d %_pathTools%
-            set build=%_compiler-gcc% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -std=gnu11 -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DF_CRYSTAL=40000000 -DESP8266 -I%_pathCore% -I%_pathVariant% !pathlibraries! -I"!root!" "!sourceLib!" -o "!outputLib!"
+            set build=%_compiler-gcc% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -Wpointer-arith -Wno-implicit-function-declaration -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -falign-functions=4 -MMD -std=gnu99 -ffunction-sections -fdata-sections -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DESP8266 -I%_pathCore% -I%_pathVariant% !pathlibraries! -I"!root!" "!sourceLib!" -o "!outputLib!"
             echo build !sourceLib!
             cd /d %_pathCurrent%
         )
@@ -206,7 +215,7 @@ if exist %_pathBackupIncConf% (
         echo !staticInc!>>%_pathStaticConf%
         if !extension! == .cpp (
             cd /d %_pathTools%
-            set build=%_compiler-g++% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -std=gnu++11 -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DF_CRYSTAL=40000000 -DESP8266 -I%_pathCore% -I%_pathVariant% !pathLib! -I"!root:~0,-1!" "!sourceInc!" -o "!outputInc!"
+            set build=%_compiler-g++% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -mlongcalls -mtext-section-literals -fno-exceptions -fno-rtti -falign-functions=4 -std=c++11 -MMD -ffunction-sections -fdata-sections -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DESP8266 -I%_pathCore% -I%_pathVariant% !pathLib! -I"!root:~0,-1!" "!sourceInc!" -o "!outputInc!"
             !build!
             echo build !sourceInc!
             set slibrary=%_compiler-static-library% cru "!staticInc!" "!outputInc!"
@@ -216,7 +225,7 @@ if exist %_pathBackupIncConf% (
         )
         if !extension! == .c (
             cd /d %_pathTools%
-            set build=%_compiler-gcc% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -std=gnu11 -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DF_CRYSTAL=40000000 -DESP8266 -I%_pathCore% -I%_pathVariant% !pathLib! -I"!root:~0,-1!" "!sourceInc!" -o "!outputInc!"
+            set build=%_compiler-gcc% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -Wpointer-arith -Wno-implicit-function-declaration -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -falign-functions=4 -MMD -std=gnu99 -ffunction-sections -fdata-sections -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DESP8266 -I%_pathCore% -I%_pathVariant% !pathLib! -I"!root:~0,-1!" "!sourceInc!" -o "!outputInc!"
             !build!
             echo build !sourceInc!
             set slibrary=%_compiler-static-library% cru "!staticInc!" "!outputInc!"
@@ -234,9 +243,9 @@ if exist %_pathIncludeConf% (
 )
 
 cd /d %_pathTools%
-set compile=%_compiler-g++% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -std=gnu++11 -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DF_CRYSTAL=40000000 -DESP8266 -I%_pathCore% -I%_pathVariant% !pathLib! !pathInc! "!_pathSourceFile!" -o "!_pathSourceOut!"
+set compile=%_compiler-g++% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -mlongcalls -mtext-section-literals -fno-exceptions -fno-rtti -falign-functions=4 -std=c++11 -MMD -ffunction-sections -fdata-sections -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DESP8266 -I%_pathCore% -I%_pathVariant% !pathLib! !pathInc! "!_pathSourceFile!" -o "!_pathSourceOut!"
 !compile!
-echo build %_pathSourceFile%
+echo build !_pathSourceFile!
 
 if exist %_pathStaticConf% (
     for /F "delims= tokens=1*" %%f in ('Type "%_pathStaticConf%"') do (
@@ -244,7 +253,7 @@ if exist %_pathStaticConf% (
     )
 )
 
-if exist %_pathSourceOut% (
+if exist !_pathSourceOut! (
     set buildELF=%_compiler-gcc% -g -w -Os -nostdlib -Wl,--no-check-sections -u call_user_start -u _printf_float -u _scanf_float -Wl,-static -L%_pathSDKlib% -L%_pathSDKld% -L%_pathSDKelflib% -Teagle.flash.1m64.ld -Wl,--gc-sections -Wl,-wrap,system_restart_local -Wl,-wrap,spi_flash_read -o "!_pathSourceELF!" -Wl,--start-group "!_pathSourceOut!" !staticLink!%_pathStaticLibraryCore% -lhal -lphy -lpp -lnet80211 -llwip2 -lwpa -lcrypto -lmain -lwps -laxtls -lespnow -lsmartconfig -lairkiss -lmesh -lwpa2 -lstdc++ -lm -lc -lgcc -Wl,--end-group
     !buildELF!
     ::echo !buildELF!
@@ -253,10 +262,10 @@ if exist %_pathSourceOut% (
     goto :UNSUCCESS
 )
 
-if exist %_pathSourceELF% (
-    set buildBin=%_compiler-upload% -eo %_pathConf% -bo %_pathSourceBIN% -bm dout -bf 40 -bz 1M -bs .text -bp 4096 -ec -eo %_pathSourceELF% -bs .irom0.text -bs .text -bs .data -bs .rodata -bc -ec
+if exist !_pathSourceELF! (
+    set buildBin=%_compiler-upload% -eo %_pathConf% -bo "!_pathSourceBIN!" -bm dout -bf 40 -bz 1M -bs .text -bp 4096 -ec -eo "!_pathSourceELF!" -bs .irom0.text -bs .text -bs .data -bs .rodata -bc -ec
     !buildBin!
-    echo compile binary %_pathSourceELF%
+    echo compile binary !_pathSourceELF!
 ) else (
     goto :UNSUCCESS
 )
@@ -269,7 +278,7 @@ if exist !_pathSourceBIN! (
 
 :UPLOAD
 set /p ask=Do you want to upload (Y/N):
-if %ask%==Y(
+if %ask%==Y (
     goto :YES
 ) else (
     goto :NO
@@ -293,3 +302,13 @@ if "!status!" == "%reuslt%" (
     !upload!
     echo Upload done !!!
 )
+
+goto :eof
+
+:NO
+echo Build successfull !!!
+goto :eof
+
+:UNSUCCESS
+echo Build Unsuccessfull !!!
+goto :eof
