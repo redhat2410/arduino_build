@@ -29,7 +29,7 @@ def isExist(List, find):
 # Hàm search sẽ tìm kiếm tất cả các file header có liên qua tới file source
 # @param source: file nguồn 
 # @param none
-def search(source, mode):
+def search(source):
     #define word compare
     word = "#include"
     word_1 = "Arduino.h"
@@ -56,14 +56,10 @@ def search(source, mode):
                     result = line.split('"')
                     result = result[1].split('"')
                 #ignore header special
-                if mode == "AVR" :
-                    if (result[0] != word_1) and (result[0] != word_2) and (result[0] != word_3) and (result[0] != word_4) and (result[0] != word_5) and (result[0] != word_6) and (result[0] != word_7) :
-                        if not isExist(headerNameInc, result[0]):
-                            headerNameInc.append(result[0])
-                else:
-                    if result[0] != word_7:
-                        if not isExist(headerNameInc, result[0]):
-                            headerNameInc.append(result[0])
+                if (result[0] != word_1) and (result[0] != word_2) and (result[0] != word_3) and (result[0] != word_4) and (result[0] != word_5) and (result[0] != word_6) and (result[0] != word_7) :
+                    if not isExist(headerNameInc, result[0]):
+                        headerNameInc.append(result[0])
+                        print(result[0])
         file.close()
     else:
         print("Error source file is not exist.")
@@ -108,7 +104,7 @@ def writeFile(filename, data):
         file.writelines(data)
         file.close()
 
-def process(source, mode):
+def process(source):
 
     if path.exists(pathBackupInc):
         os.remove(pathBackupInc)
@@ -119,14 +115,14 @@ def process(source, mode):
     if path.exists(pathHeaderConf):
         os.remove(pathHeaderConf)
 
-    search(source, mode)
+    search(source)
     searchPath()
 
     for full in headerFullPath:
-        search(full, mode)
+        search(full)
         pathsrc = searchCppFile(full)
         if pathsrc != "" :
-            search(pathsrc, mode)
+            search(pathsrc)
     searchPath()
 
     for full in headerFullPath:
@@ -160,6 +156,6 @@ def process(source, mode):
 
 
 if len(sys.argv) > 1:
-    process(sys.argv[1], sys.argv[2])
+    process(sys.argv[1])
 else:
     print("Error no input source file.")
