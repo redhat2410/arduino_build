@@ -141,17 +141,19 @@ def process(source):
             search(pathsrc)
     searchPath()
 
-
     for full in headerFullPath:
         if (full.find( path.abspath(pathIncludesLib) ) != -1) or ( full.find(pathLibrary) != -1 ):
-            headerFullPathLib.append(path.dirname(full))
+            if not isExist(headerFullPathLib, path.dirname(full)):
+                headerFullPathLib.append(path.dirname(full))
         else:
-            headerFullPathInc.append(searchCppFile(full))
+            if not isExist(headerFullPathInc, searchCppFile(full)):
+                headerFullPathInc.append(searchCppFile(full))
 
     t_headerPath = []
     for full in headerPath:
         if (full.find(path.abspath(pathIncludesLib)) == -1) and ( full.find(pathLibrary) == -1 ):
-            t_headerPath.append(full)
+            if not isExist(t_headerPath, full):
+                t_headerPath.append(full)
 
     tempPath = []
     for full in headerPath:
@@ -160,10 +162,12 @@ def process(source):
 
     for header in headerFullPath:
         if (header.find( path.abspath(pathIncludesLib) ) != -1) or (header.find(pathLibrary) != -1):
-            temp = searchCppFile(header) + ".o"
-            temp = Path(temp).name
-            temp = os.path.join(path.abspath(pathOutput), temp)
-            writeFile(pathHeaderConf, temp + "\n")
+            temp = searchCppFile(header)
+            if temp != "":
+                temp = temp + ".o"
+                temp = Path(temp).name
+                temp = os.path.join(path.abspath(pathOutput), temp)
+                writeFile(pathHeaderConf, temp + "\n")
         else :
             temp = searchCppFile(header) + ".a"
             writeFile(pathHeaderConf, temp + "\n")

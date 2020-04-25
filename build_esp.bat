@@ -63,7 +63,7 @@ for %%f in (%_pathBuildLib%\*) do (
 ::Kiểm tra file path.conf có tồn tại nếu tồn tại thì không cần hỏi đường dẫn arduino
 ::nếu file ko tồn tại thực hiện hỏi đường dẫn arduino và ghi lại file
 
-set _pathArduino="C:\Users\ducvu\AppData\Local\Arduino15\packages\esp8266"
+set _pathArduino="C:\Users\admin\AppData\Local\Arduino15\packages\esp8266"
 
 :DEFINE_PATH
 :: Macro path file
@@ -257,7 +257,7 @@ if exist !_pathSourceOut! (
     set buildELF=%_compiler-gcc% -g -w -Os -nostdlib -Wl,--no-check-sections -u call_user_start -u _printf_float -u _scanf_float -Wl,-static -L%_pathSDKlib% -L%_pathSDKld% -L%_pathSDKelflib% -Teagle.flash.1m64.ld -Wl,--gc-sections -Wl,-wrap,system_restart_local -Wl,-wrap,spi_flash_read -o "!_pathSourceELF!" -Wl,--start-group "!_pathSourceOut!" !staticLink!%_pathStaticLibraryCore% -lhal -lphy -lpp -lnet80211 -llwip2 -lwpa -lcrypto -lmain -lwps -laxtls -lespnow -lsmartconfig -lairkiss -lmesh -lwpa2 -lstdc++ -lm -lc -lgcc -Wl,--end-group
     !buildELF!
     ::echo !buildELF!
-    echo compile !_pathSourceOut!
+    echo compile !_pathSourceELF!
 ) else (
     goto :UNSUCCESS
 )
@@ -290,7 +290,7 @@ set /p port=Enter port name:
 for /f "delims=" %%f in ('mode %port%') do (
     set status=%%f
 )
-
+echo !status!
 set result=Illegal device name - %port%
 ::kiểm tra cổng COM valid ?
 if "!status!" == "%reuslt%" (
