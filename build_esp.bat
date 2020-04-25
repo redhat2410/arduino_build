@@ -27,6 +27,12 @@ set _pathBackupIncConf=%_pathBuildEtc%\backupInc.conf
 set _pathBackupLibConf=%_pathBuildEtc%\backupLib.conf
 set _pathStaticConf=%_pathBuildEtc%\pathStaticLib.conf
 
+:: Macro tools search
+set _tools_search=tools\search
+set _tools_duplicate=tools\find_duplicate
+set _tools_configure=tools\configure_esp
+set _tools_search_path=tools\search_path
+
 :: create sub-folder 'core, Libraries, inc, Output, src' if not exist
 if not exist %_pathBuildCore% ( md %_pathBuildCore% )
 if not exist %_pathBuildLib% ( md %_pathBuildLib% )
@@ -62,9 +68,19 @@ for %%f in (%_pathBuildLib%\*) do (
 )
 ::Kiểm tra file path.conf có tồn tại nếu tồn tại thì không cần hỏi đường dẫn arduino
 ::nếu file ko tồn tại thực hiện hỏi đường dẫn arduino và ghi lại file
+set toolsPath=%_tools_search_path%
+!toolsPath!
 
-set _pathArduino="C:\Users\admin\AppData\Local\Arduino15\packages\esp8266"
+if exist %_pathPathFileConf% (
+    for /F "delims=" %%f in ('Type %_pathPathFileConf%') do (
+        set tempPath=%%f
+    )
+    set _pathArduino=!tempPath!\packages\esp8266
 
+    echo Location esp: !_pathArduino!
+) else (
+    goto :UNSUCCESS
+)
 :DEFINE_PATH
 :: Macro path file
 set _pathCore=!_pathArduino!\hardware\esp8266\2.4.0\cores\esp8266
@@ -86,10 +102,6 @@ if exist %_pathPathFileConf% ( del %_pathPathFileConf% )
 echo %_pathBuildInc%>>%_pathPathFileConf%
 echo %_pathLibrary%>>%_pathPathFileConf%
 
-:: Macro tools search
-set _tools_search=tools\search
-set _tools_duplicate=tools\find_duplicate
-set _tools_configure=tools\configure_esp
 :: Macro compiler
 set _compiler-gcc=xtensa-lx106-elf-gcc
 set _compiler-g++=xtensa-lx106-elf-g++
@@ -290,7 +302,6 @@ set /p port=Enter port name:
 for /f "delims=" %%f in ('mode %port%') do (
     set status=%%f
 )
-echo !status!
 set result=Illegal device name - %port%
 ::kiểm tra cổng COM valid ?
 if "!status!" == "%reuslt%" (
