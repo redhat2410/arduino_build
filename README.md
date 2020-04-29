@@ -24,7 +24,7 @@ build_esp.bat
 ```
 ## Bố cục
 Sao khi chạy các file .bat thì bố cục trong thư mục dự án sẽ có dạng như sau:
-![alt text](https://github.com/redhat2410/arduino_build/tree/master/img/Layout.PNG)
+![alt text](https://github.com/redhat2410/arduino_build/tree/master/img/Layout.PNG?raw=true)
 - Thư mục core/ : có chức năng chứa các tập tin compile của thư viện lõi của Arduino
 - Thư mục inc/  : có chức năng chứa các tập tin thư viện do người lập trình định nghĩa ( .h, .c/.cpp ), ngoài ra còn chứa các tập tin thư viện tĩnh (.a)
 - Thư mục libraries/    : có chức năng chứa các tập tin compile của thư viện giao tiếp (SPI, Wire, EEPROM, SoftwareSerial) của Arduino.
