@@ -10,21 +10,26 @@ nhiên phiên bản này chỉ dành cho Windows.
 git clone https://github.com/redhat2410/arduino_build.git
 cd arduino_buid
 mkdir new_project
-copy -r arduino_build\\tools new_project\\
-copy arduino_build\\build.bat new_project\\
-copy arduino_build\\build_esp.bat new_project\\
+copy -r arduino_build\tools new_project\
+copy arduino_build\build.bat new_project\
+copy arduino_build\build_esp.bat new_project\
 ```
 sao khi sao chép các thư mục và tập tin cần thiết vào thư mục dự án, sau đó sẽ thực hiện chạy file .bat
 - Chạy tập tin build.bat cho các dự án thực hiện trên dòng arduino AVR.
 - Chạy tập tin build_esp.bat cho các dự án thực hiện trên dòng ESP8266
 ```bash
 cd new_project
-echo run file build.bat for project arduino AVR
 build.bat
-echo run file build_esp.bat for project ESP8266
 build_esp.bat
 ```
 ## Bố cục
 Sao khi chạy các file .bat thì bố cục trong thư mục dự án sẽ có dạng như sau:
+![alt text](https://github.com/redhat2410/arduino_build/img/Layout.PNG?raw=true)
+- Thư mục core/ : có chức năng chứa các tập tin compile của thư viện lõi của Arduino
+- Thư mục inc/  : có chức năng chứa các tập tin thư viện do người lập trình định nghĩa ( .h, .c/.cpp ), ngoài ra còn chứa các tập tin thư viện tĩnh (.a)
+- Thư mục libraries/    : có chức năng chứa các tập tin compile của thư viện giao tiếp (SPI, Wire, EEPROM, SoftwareSerial) của Arduino.
+- Thư mục output/       : có chức năng chứa các tập tin compile của chương trình chính và các tập tin chạy và nạp chương cho vdk (.elf, .hex, .bin...)
+- Thư mục tools/        : có chức năng chứa các công cụ hỗ trợ cho việc biên dịch, yêu cầu không được xóa bất cứ tập tin nào trong thư mục này
+- Tập tin new_project.cpp   : tập tin sẽ được tạo ra trong lần chay đầu tin của .bat, tập tin được tạo ra với tên của thư mục chứa nó và với định dạng cpp.
 ## Sử dụng
 ## Bản quyền
