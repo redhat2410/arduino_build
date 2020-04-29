@@ -1,14 +1,30 @@
-Hướng dẫn sử dụng
-Require: Đã cài đặt Arduino IDE
-    1. Tạo thư mục chứa project
-    2. Copy file build_core.bat vào thư mục project
-    3. Tạo file chương trình vời định dạng .cpp để cùng cấp với các folder core, inc, Output..
-    4. Mở Windows + R -> cmd, chuyển cmd tới thư mục project
-    5. Thực hiện chạy file .bat bằng câu lệnh >build_core.bat 
-
-Mô tả tổ chức thư mục
-    -   Thư mục core: chứa thư viện cấu trúc của Arduino
-    -   Thư mục inc: chứa thư viện được người dùng định nghĩa
-    -   Thư mục Libraries: chứa thư viện bao gồm giao thức của Arduino (I2C, SPI, UART)...,
-    Ngoài ra thư mục còn chứa thư viện được xây dựng trên cộng đồng.
-    -   Thư mục Output: chứa các file chương trình chạy và file nạp cho arduino (elf, hex, o)
+# Trình biên dịch AVR và ESP
+Trình biên dịch được sử dụng cho các dòng vi điều khiển AVR và tương thích với các sản phẩm Arduino: Arduino Uno, Nano, Pro Mini ... . Trình biên dịch còn tương thích với các dòng ESP8266 như: ESP8266-v1, ESP8266-v7, ESP8266-v12. Tuy
+nhiên phiên bản này chỉ dành cho Windows.
+## Cài đặt
+Để sử dụng trình biên dịch đầu tiên:
+- Thực hiên clone tools hỗ trợ từ github.
+- Tạo thư mục chứa dự án.
+- Sao chép thư mục tools, build.bat và build_esp.bat vào thư mục chứa dự án.
+```bash
+git clone https://github.com/redhat2410/arduino_build.git
+cd arduino_buid
+mkdir new_project
+copy -r arduino_build\\tools new_project\\
+copy arduino_build\\build.bat new_project\\
+copy arduino_build\\build_esp.bat new_project\\
+```
+sao khi sao chép các thư mục và tập tin cần thiết vào thư mục dự án, sau đó sẽ thực hiện chạy file .bat
+- Chạy tập tin build.bat cho các dự án thực hiện trên dòng arduino AVR.
+- Chạy tập tin build_esp.bat cho các dự án thực hiện trên dòng ESP8266
+```bash
+cd new_project
+echo run file build.bat for project arduino AVR
+build.bat
+echo run file build_esp.bat for project ESP8266
+build_esp.bat
+```
+## Bố cục
+Sao khi chạy các file .bat thì bố cục trong thư mục dự án sẽ có dạng như sau:
+## Sử dụng
+## Bản quyền
