@@ -23,7 +23,8 @@ build_esp.bat
 ```
 ## Bố cục
 Sao khi chạy các file .bat thì bố cục trong thư mục dự án sẽ có dạng như sau:
-![](https://github.com/redhat2410/arduino_build/tree/develop/img/Layout.PNG)
+![](img/Layout.PNG)
+
 - **Thư mục core/ :** có chức năng chứa các tập tin compile (.o, .d) của thư viện lõi của Arduino
 - **Thư mục inc/  :** có chức năng chứa các tập tin thư viện do người lập trình định nghĩa ( .h, .c/.cpp ), ngoài ra còn chứa các tập tin thư viện tĩnh (.a)
 - **Thư mục inc/lib/      :** có chức năng chứa các tập tin mã nguồn thư viện ngoài (.h, .c/.cpp) khi sử dụng thư viện ngoài thì người dùng phải copy các mã nguồn của thư viện vào thư mục này ( nên tạo các thư mục để phân loại ).
@@ -53,7 +54,7 @@ Sao khi chạy các file .bat thì bố cục trong thư mục dự án sẽ có
 - Bắt buộc phải cài đặt Arduino IDE ( Link download: https://www.arduino.cc/en/Main/Software ).
 - Cài đặt thư viện ESP8266 ( Link hướng dẫn http://arduino.vn/bai-viet/1172-lap-trinh-esp8266-bang-arduino-ide )
 - Cài đặt thư viện ESP8266 với phiên bản 2.4.0:
-![](https://github.com/redhat2410/arduino_build/tree/develop/img/esp.jpg)
+![](img/esp.jpg)
 - Trong quá trình biên dịch, trình biên dịch sẽ hỏi bạn "Do you want to upload (Y/N)", bạn trả lời "Y" khi muốn nạp chương trình cho vi điều khiển, ngược lại "N" khi bạn chỉ muốn build chương trình.
 
 **Lưu ý:**
