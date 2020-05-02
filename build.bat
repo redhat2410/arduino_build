@@ -33,6 +33,22 @@ if not exist %_pathBuildInc% ( md %_pathBuildInc% )
 if not exist %_pathBuildOut% ( md %_pathBuildOut% )
 if not exist %_pathBuildTool% ( md %_pathBuildTool% )
 if not exist %_pathBuildEtc% ( md %_pathBuildEtc% )
+
+for %%f in (%cd%) do ( set sourceName=%%~nxf.cpp )
+for %%f in (%_pathTempSourceConf%) do ( set sourceTemp=%%~nxf )
+
+if not exist %cd%\!sourceName! (
+    if exist %_pathTempSourceConf% (
+        copy %_pathTempSourceConf% %cd%
+        set tpath=%cd%\!sourceTemp!
+        if exist !tpath! (
+            set rename=ren !sourceTemp! !sourceName!
+            !rename!
+            echo rename !sourceTemp!
+        )
+    )
+)
+
 for %%f in (%_pathBuildOut%\*) do (
     del %%f
 )
