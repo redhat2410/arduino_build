@@ -6,20 +6,20 @@ Trình biên dịch được sử dụng cho các dòng vi điều khiển AVR v
 - Tạo thư mục chứa dự án.
 - Sao chép thư mục tools, build.bat và build_esp.bat vào thư mục chứa dự án.
 ```bash
-git clone https://github.com/redhat2410/arduino_build.git
-cd arduino_buid
-mkdir new_project
-copy -r arduino_build\tools new_project\
-copy arduino_build\build.bat new_project\
-copy arduino_build\build_esp.bat new_project\
+> git clone https://github.com/redhat2410/arduino_build.git
+> cd arduino_buid
+> mkdir new_project
+> copy -r arduino_build\tools new_project\
+> copy arduino_build\build.bat new_project\
+> copy arduino_build\build_esp.bat new_project\
 ```
 sao khi sao chép các thư mục và tập tin cần thiết vào thư mục dự án, sau đó sẽ thực hiện chạy file .bat
 - Chạy tập tin build.bat cho các dự án thực hiện trên dòng arduino AVR.
 - Chạy tập tin build_esp.bat cho các dự án thực hiện trên dòng ESP8266.
 ```bash
-cd new_project
-build.bat
-build_esp.bat
+> cd new_project
+> build.bat
+> build_esp.bat
 ```
 ## Bố cục
 Sao khi chạy các file .bat thì bố cục trong thư mục dự án sẽ có dạng như sau:
