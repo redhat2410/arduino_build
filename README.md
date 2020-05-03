@@ -9,9 +9,9 @@ Trình biên dịch được sử dụng cho các dòng vi điều khiển AVR v
 > git clone https://github.com/redhat2410/arduino_build.git
 > cd arduino_buid
 > mkdir new_project
-> copy -r arduino_build\tools new_project\
-> copy arduino_build\build.bat new_project\
-> copy arduino_build\build_esp.bat new_project\
+> cp -rf arduino_build\tools new_project\
+> cp arduino_build\build.bat new_project\
+> cp arduino_build\build_esp.bat new_project\
 ```
 sao khi sao chép các thư mục và tập tin cần thiết vào thư mục dự án, sau đó sẽ thực hiện chạy file .bat
 - Chạy tập tin build.bat cho các dự án thực hiện trên dòng arduino AVR.

@@ -47,12 +47,12 @@ for %%f in (%_pathTempSourceConf%) do ( set sourceTemp=%%~nxf )
 
 if not exist %cd%\!sourceName! (
     if exist %_pathTempSourceConf% (
-        copy %_pathTempSourceConf% %cd%
+        cp %_pathTempSourceConf% %cd%
         set tpath=%cd%\!sourceTemp!
         if exist !tpath! (
             set rename=ren !sourceTemp! !sourceName!
             !rename!
-            echo rename !sourceTemp!
+            echo Create !sourceName!
         )
     )
 )
@@ -175,9 +175,9 @@ if exist %_pathStaticConf% ( del %_pathStaticConf% )
 cd /d %_pathCurrent%
 for %%f in (%_pathCurrent%\*.cpp) do (
     set _pathSourceFile=%%f
-    set _pathSourceOut=%_pathBuildOut%\%%~nxf.o
-    set _pathSourceELF=%_pathBuildOut%\%%~nxf.elf
-    set _pathSourceBIN=%_pathBuildOut%\%%~nxf.bin
+    set _pathSourceOut=%_pathBuildOut%\%%~nf.o
+    set _pathSourceELF=%_pathBuildOut%\%%~nf.elf
+    set _pathSourceBIN=%_pathBuildOut%\%%~nf.bin
 )
 
 ::thực hiện search header trong file .cpp
@@ -268,19 +268,18 @@ if exist %_pathStaticConf% (
 if exist !_pathSourceOut! (
     set buildELF=%_compiler-gcc% -g -w -Os -nostdlib -Wl,--no-check-sections -u call_user_start -u _printf_float -u _scanf_float -Wl,-static -L%_pathSDKlib% -L%_pathSDKld% -L%_pathSDKelflib% -Teagle.flash.1m64.ld -Wl,--gc-sections -Wl,-wrap,system_restart_local -Wl,-wrap,spi_flash_read -o "!_pathSourceELF!" -Wl,--start-group "!_pathSourceOut!" !staticLink!%_pathStaticLibraryCore% -lhal -lphy -lpp -lnet80211 -llwip2 -lwpa -lcrypto -lmain -lwps -laxtls -lespnow -lsmartconfig -lairkiss -lmesh -lwpa2 -lstdc++ -lm -lc -lgcc -Wl,--end-group
     !buildELF!
-    ::echo !buildELF!
     echo compile !_pathSourceELF!
 ) else (
     goto :UNSUCCESS
 )
 
-if exist !_pathSourceELF! (
-    set buildBin=%_compiler-upload% -eo %_pathConf% -bo "!_pathSourceBIN!" -bm dout -bf 40 -bz 1M -bs .text -bp 4096 -ec -eo "!_pathSourceELF!" -bs .irom0.text -bs .text -bs .data -bs .rodata -bc -ec
-    !buildBin!
-    echo compile binary !_pathSourceELF!
-) else (
-    goto :UNSUCCESS
-)
+if not exist !_pathSourceELF! ( goto :UNSUCCESS )
+
+::cd /d %_pathArduino%
+set buildBin=%_compiler-upload% -eo %_pathConf% -bo "!_pathSourceBIN!" -bm dout -bf 40 -bz 1M -bs .text -bp 4096 -ec -eo "!_pathSourceELF!" -bs .irom0.text -bs .text -bs .data -bs .rodata -bc -ec
+%buildBin%
+echo compile binary !_pathSourceELF!
+
 
 if exist !_pathSourceBIN! (
     goto :UPLOAD
@@ -307,12 +306,11 @@ set result=Illegal device name - %port%
 if "!status!" == "%reuslt%" (
     echo %port% invaild
     goto :UNSUCCESS
-) else (
-    ::nếu cổng COM vaild thực hiện upload
-    set upload=%_compiler-upload% -vv -cd ck -cb 115200 -cp %port% -ca 0x00000 -cf "!_pathSourceBIN!"
-    !upload!
-    echo Upload done !!!
 )
+::cd /d %_pathArduino%
+set upload=%_compiler-upload% -vv -cd ck -cb 115200 -cp %port% -ca 0x00000 -cf "%_pathSourceBIN%"
+%upload%
+echo Upload done !!!
 
 goto :eof
 
