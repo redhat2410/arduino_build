@@ -94,6 +94,7 @@ echo %_pathBuildInc%>>%_pathPathFileConf%
 set _tools_search=tools\search
 set _tools_duplicate=tools\find_duplicate
 set _tools_configure=tools\configure
+set _tools_lisPort=tools\listPort
 :: Macro compiler
 set _compiler-gcc=avr-gcc
 set _compiler-g++=avr-g++
@@ -354,7 +355,10 @@ if %ask%==Y (
 goto :eof
 
 :YES
-
+::Show list port
+echo List COM port.
+cd /d %_pathCurrent%
+%_tools_lisPort%
 ::Nhập tên cổng COM
 set /p port=Enter port name:
 for /f "delims=" %%f in ('mode %port%') do (
@@ -362,6 +366,7 @@ for /f "delims=" %%f in ('mode %port%') do (
 )
 set result=Illegal device name - %port%
 ::kiểm tra cổng COM vaild?
+cd /d %_pathTools%
 if "!status!"=="%result%" ( 
     echo %port% invaild
     goto :UNSUCCESS

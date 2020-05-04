@@ -32,6 +32,7 @@ set _tools_search=tools\search
 set _tools_duplicate=tools\find_duplicate
 set _tools_configure=tools\configure_esp
 set _tools_search_path=tools\search_path
+set _tools_listPort=tools\listPort
 
 :: create sub-folder 'core, Libraries, inc, Output, src' if not exist
 if not exist %_pathBuildCore% ( md %_pathBuildCore% )
@@ -296,6 +297,11 @@ if %ask%==Y (
 )
 
 :YES
+::Show list Port
+echo List COM port.
+cd /d %_pathCurrent%
+%_tools_listPort%
+
 ::enter the name port com
 set /p port=Enter port name:
 for /f "delims=" %%f in ('mode %port%') do (
