@@ -24,6 +24,7 @@ set _pathArduinoConf=%_pathBuildEtc%\pathArduino.conf
 set _pathBackupIncConf=%_pathBuildEtc%\backupInc.conf
 set _pathBackupLibConf=%_pathBuildEtc%\backupLib.conf
 set _pathStaticConf=%_pathBuildEtc%\pathStaticLib.conf
+set _pathTempSourceConf=%_pathBuildEtc%\_temp.conf
 
 :: create sub-folder 'core, Libraries, inc, Output, src' if not exist
 if not exist %_pathBuildCore% ( md %_pathBuildCore% )
@@ -34,17 +35,17 @@ if not exist %_pathBuildOut% ( md %_pathBuildOut% )
 if not exist %_pathBuildTool% ( md %_pathBuildTool% )
 if not exist %_pathBuildEtc% ( md %_pathBuildEtc% )
 
-for %%f in (%cd%) do ( set sourceName=%%~nxf.cpp )
+for %%f in (%_pathCurrent%) do ( set sourceName=%%~nxf.cpp )
 for %%f in (%_pathTempSourceConf%) do ( set sourceTemp=%%~nxf )
 
 if not exist %cd%\!sourceName! (
     if exist %_pathTempSourceConf% (
-        copy %_pathTempSourceConf% %cd%
+        cp %_pathTempSourceConf% %cd%
         set tpath=%cd%\!sourceTemp!
         if exist !tpath! (
             set rename=ren !sourceTemp! !sourceName!
             !rename!
-            echo rename !sourceTemp!
+            echo Create !sourceName!
         )
     )
 )
@@ -52,6 +53,13 @@ if not exist %cd%\!sourceName! (
 for %%f in (%_pathBuildOut%\*) do (
     del %%f
 )
+for %%f in (%_pathBuildCore%\*) do (
+    del %%f
+)
+for %%f in (%_pathBuildLib%\*) do (
+    del %%f
+)
+
 ::Kiểm tra file path.conf có tồn tại nếu tồn tại thì không cần hỏi đường dẫn arduino
 ::nếu file ko tồn tại thực hiện hỏi đường dẫn arduino và ghi lại file
 if not exist %_pathArduinoConf% (
@@ -139,7 +147,7 @@ for %%f in (%_pathCore%\*".s") do (
     !exec_asm!
     set exec_ar_asm=%_compiler-static-library% rcs "%_pathStaticLibraryCore%" "!pathOut_asm!"
     !exec_ar_asm!
-    echo !exec_ar_asm!
+    echo Compile !pathFile_asm!
 )
 
 :: Compile file .c to object file (.o)
@@ -150,7 +158,7 @@ for %%f in (%_pathCore%\*".c") do (
     !exec_gcc!
     set exec_ar_gcc=%_compiler-static-library% rcs "%_pathStaticLibraryCore%" "!pathOut_gcc!"
     !exec_ar_gcc!
-    echo !exec_ar_gcc!
+    echo Compile !pathFile_gcc!
 )
 
 :: Compile file .cpp to object file (.o)
@@ -161,7 +169,7 @@ for %%f in (%_pathCore%\*".cpp") do (
     !exec_g++!
     set exec_ar_g++=%_compiler-static-library% rcs "%_pathStaticLibraryCore%" "!pathOut_g++!"
     !exec_ar_g++!
-    echo !exec_ar_g++!
+    echo Compile !pathFile_g++!
 )
 ::----------------------------------------------------------------------------------------
 
@@ -184,7 +192,7 @@ for /d %%f in (%_pathLibrary%\*) do (
         !_exec!
         set _static=%_compiler-static-library% rcs %_pathStaticLibraryLib% "!pathSourceOut!"
         !_static!
-        echo !_static!
+        echo Compile !pathSource!
     )
     ::compile file .h
     for %%r in ("!_pathRoot!"\src\*.h) do (
@@ -202,7 +210,7 @@ for /d %%f in (%_pathLibrary%\*) do (
             !_exec!
             set _static=%_compiler-static-library% rcs %_pathStaticLibraryLib% "!pathSourceOut!"
             !_static!
-            echo !_static!
+            echo Compile !pathSource!
         )
     )
 )
