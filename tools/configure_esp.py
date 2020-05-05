@@ -167,10 +167,14 @@ def process(source):
                 temp = temp + ".o"
                 temp = Path(temp).name
                 temp = os.path.join(path.abspath(pathOutput), temp)
-                writeFile(pathHeaderConf, temp + "\n")
+                #writeFile(pathHeaderConf, temp + "\n")
         else :
-            temp = searchCppFile(header) + ".a"
-            writeFile(pathHeaderConf, temp + "\n")
+            temp = header.replace(".h", ".cpp") + ".a"
+            if path.exists(temp):
+                writeFile(pathHeaderConf, temp + "\n")
+            else:
+                temp = searchCppFile(header) + ".a"
+                writeFile(pathHeaderConf, temp + "\n")
 
     for headerInc in headerFullPathInc:
         writeFile(pathBackupInc, headerInc + "\n" )

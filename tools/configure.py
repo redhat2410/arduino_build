@@ -59,7 +59,6 @@ def search(source):
                 if (result[0] != word_1) and (result[0] != word_2) and (result[0] != word_3) and (result[0] != word_4) and (result[0] != word_5) and (result[0] != word_6) and (result[0] != word_7) :
                     if not isExist(headerNameInc, result[0]):
                         headerNameInc.append(result[0])
-                        print(result[0])
         file.close()
     else:
         print("Error source file is not exist.")
@@ -141,10 +140,14 @@ def process(source):
             temp = searchCppFile(header) + ".o"
             temp = Path(temp).name
             temp = os.path.join(path.abspath(pathOutput), temp)
-            writeFile(pathHeaderConf, temp + "\n")
+            #writeFile(pathHeaderConf, temp + "\n")
         else :
-            temp = searchCppFile(header) + ".a"
-            writeFile(pathHeaderConf, temp + "\n")
+            temp = header.replace(".h", ".cpp") + ".a"
+            if path.exists(temp):
+                writeFile(pathHeaderConf, temp + "\n")
+            else:
+                temp = searchCppFile(header) + ".a"
+                writeFile(pathHeaderConf, temp + "\n")
 
     for headerInc in headerFullPathInc:
         writeFile(pathBackupInc, headerInc + "\n" )
