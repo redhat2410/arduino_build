@@ -2,6 +2,7 @@ from os import path
 from pathlib import Path
 import os
 import sys
+import search_path as sp
 
 
 pathBackupInc= "tools\\etc\\backupInc.conf"
@@ -15,6 +16,9 @@ pathIncludes = "inc\\"
 pathIncludesLib = "inc\\lib\\"
 pathOutput = "output\\"
 pathLibrary = "C:\\Users\\admin\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.4.0\\libraries"
+
+folder="Arduino15"
+pathRoot="C:\\Users"
 
 headerNameInc = []
 headerNameLib = []
@@ -130,6 +134,11 @@ def process(source):
         os.remove(pathHeaderConf)
     if path.exists(pathTempConf):
         os.remove(pathTempConf)
+
+    for root, dirs, files in os.walk(pathRoot) :
+        if folder in dirs:
+            pathLibrary = path.join(root, folder)
+            break
 
     search(source)
     searchPath()
