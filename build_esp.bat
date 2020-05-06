@@ -72,8 +72,8 @@ for %%f in (%_pathBuildLib%\*) do (
 set toolsPath=%_tools_search_path%
 !toolsPath!
 
-if exist %_pathPathFileConf% (
-    for /F "delims=" %%f in ('Type %_pathPathFileConf%') do (
+if exist %_pathArduinoConf% (
+    for /F "delims=" %%f in ('Type %_pathArduinoConf%') do (
         set tempPath=%%f
     )
     set _pathArduino=!tempPath!\packages\esp8266
@@ -82,7 +82,7 @@ if exist %_pathPathFileConf% (
 ) else (
     goto :UNSUCCESS
 )
-:DEFINE_PATH
+
 :: Macro path file
 set _pathCore=!_pathArduino!\hardware\esp8266\2.4.0\cores\esp8266
 set _pathTools=!_pathArduino!\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\bin
@@ -260,6 +260,12 @@ set compile=%_compiler-g++% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathS
 !compile!
 echo build !_pathSourceFile!
 
+if exist %_pathHeaderFileConf% (
+    for /F "delims=" %%f in ('Type "%_pathHeaderFileConf%"') do (
+        echo %%f>>%_pathStaticConf%
+    )
+)
+
 if exist %_pathStaticConf% (
     for /F "delims= tokens=1*" %%f in ('Type "%_pathStaticConf%"') do (
         set staticLink="%%f" !staticLink!
@@ -280,7 +286,6 @@ if not exist !_pathSourceELF! ( goto :UNSUCCESS )
 set buildBin=%_compiler-upload% -eo %_pathConf% -bo "!_pathSourceBIN!" -bm dout -bf 40 -bz 1M -bs .text -bp 4096 -ec -eo "!_pathSourceELF!" -bs .irom0.text -bs .text -bs .data -bs .rodata -bc -ec
 %buildBin%
 echo compile binary !_pathSourceELF!
-
 
 if exist !_pathSourceBIN! (
     goto :UPLOAD
