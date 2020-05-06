@@ -48,7 +48,7 @@ for %%f in (%_pathTempSourceConf%) do ( set sourceTemp=%%~nxf )
 
 if not exist %cd%\!sourceName! (
     if exist %_pathTempSourceConf% (
-        cp %_pathTempSourceConf% %cd%
+        xcopy %_pathTempSourceConf% %cd%
         set tpath=%cd%\!sourceTemp!
         if exist !tpath! (
             set rename=ren !sourceTemp! !sourceName!
