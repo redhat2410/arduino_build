@@ -35,6 +35,13 @@ if not exist %_pathBuildOut% ( md %_pathBuildOut% )
 if not exist %_pathBuildTool% ( md %_pathBuildTool% )
 if not exist %_pathBuildEtc% ( md %_pathBuildEtc% )
 
+:: Macro tools search
+set _tools_search=tools\search
+set _tools_duplicate=tools\find_duplicate
+set _tools_configure=tools\configure
+set _tools_lisPort=tools\listPort
+set _tools_search_path=tools\search_path_avr
+
 for %%f in (%_pathCurrent%) do ( set sourceName=%%~nxf.cpp )
 for %%f in (%_pathTempSourceConf%) do ( set sourceTemp=%%~nxf )
 
@@ -64,13 +71,19 @@ for %%f in (%_pathBuildLib%\*) do (
 ::nếu file ko tồn tại thực hiện hỏi đường dẫn arduino và ghi lại file
 if not exist %_pathArduinoConf% (
     ::hỏi đường dẫn Arduino
-    set /P _pathArduino=Enter the path Arduino:
-    if exist !_pathArduino! (
-        echo !_pathArduino!>%_pathArduinoConf%
-        goto :DEFINE_PATH
-    ) else (
-        goto :UNSUCCESS
+    set toolsSearch=%_tools_search_path%
+    !toolsSearch!
+    for /F "delims=" %%f in ('Type "%_pathArduinoConf%"') do (
+        set _pathArduino=%%f
     )
+    goto :DEFINE_PATH
+    REM set /P _pathArduino=Enter the path Arduino:
+    REM if exist !_pathArduino! (
+    REM     echo !_pathArduino!>%_pathArduinoConf%
+    REM     goto :DEFINE_PATH
+    REM ) else (
+    REM     goto :UNSUCCESS
+    REM )
 ) else (
     for /F "delims=" %%f in ('Type "%_pathArduinoConf%"') do (
         set _pathArduino=%%f
@@ -78,7 +91,10 @@ if not exist %_pathArduinoConf% (
     goto :DEFINE_PATH
 )
 
+
+
 :DEFINE_PATH
+echo Location !_pathArduino!
 :: Macro path file
 set _pathCore=!_pathArduino!\hardware\arduino\avr\cores\arduino
 set _pathTools=!_pathArduino!\hardware\tools\avr\bin
@@ -90,15 +106,12 @@ set _pathLibraries="C:\Users\admin\Documents\Arduino\libraries"
 if exist %_pathPathFileConf% ( del %_pathPathFileConf% )
 echo %_pathBuildInc%>>%_pathPathFileConf%
 
-:: Macro tools search
-set _tools_search=tools\search
-set _tools_duplicate=tools\find_duplicate
-set _tools_configure=tools\configure
-set _tools_lisPort=tools\listPort
+
 :: Macro compiler
 set _compiler-gcc=avr-gcc
 set _compiler-g++=avr-g++
-set _compiler-static-library=avr-gcc-ar
+::set _compiler-static-library=avr-gcc-ar
+set _compiler-static-library=avr-ar
 set _compiler-hex=avr-objcopy
 set _compiler-upload=avrdude
 :: Macro option for compiler
@@ -321,7 +334,8 @@ if exist %_pathStaticConf% (
 )
 
 if exist %_pathSourceOut% (
-    set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" !staticLink!%_pathStaticLibraryLib% %_pathStaticLibraryCore%
+    ::set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" !staticLink!%_pathStaticLibraryLib% %_pathStaticLibraryCore%
+    set buildELF=%_compiler-gcc% -w -Os -g -flto -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" !staticLink!%_pathStaticLibraryLib% %_pathStaticLibraryCore%
     !buildELF!
     ::echo !buildELF!
     echo compile !_pathSourceOut!
