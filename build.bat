@@ -100,7 +100,8 @@ set _tools_lisPort=tools\listPort
 :: Macro compiler
 set _compiler-gcc=avr-gcc
 set _compiler-g++=avr-g++
-set _compiler-static-library=avr-gcc-ar
+::set _compiler-static-library=avr-gcc-ar
+set _compiler-static-library=avr-ar
 set _compiler-hex=avr-objcopy
 set _compiler-upload=avrdude
 :: Macro option for compiler
@@ -199,7 +200,7 @@ for /d %%f in (%_pathLibrary%\*) do (
     )
     ::compile file .h
     for %%r in ("!_pathRoot!"\src\*.h) do (
-        set _copy=copy -r "%%r" %_pathBuildLib%
+        set _copy=copy "%%r" %_pathBuildLib%
         !_copy!
         echo copy %%~nxr %_pathBuildLib%
     )
@@ -323,7 +324,8 @@ if exist %_pathStaticConf% (
 )
 
 if exist %_pathSourceOut% (
-    set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" !staticLink!%_pathStaticLibraryLib% %_pathStaticLibraryCore%
+    ::set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" !staticLink!%_pathStaticLibraryLib% %_pathStaticLibraryCore%
+    set buildELF=%_compiler-gcc% -w -Os -g -flto -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" !staticLink!%_pathStaticLibraryLib% %_pathStaticLibraryCore%
     !buildELF!
     ::echo !buildELF!
     echo compile !_pathSourceOut!
