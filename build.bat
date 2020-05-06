@@ -40,7 +40,7 @@ for %%f in (%_pathTempSourceConf%) do ( set sourceTemp=%%~nxf )
 
 if not exist %cd%\!sourceName! (
     if exist %_pathTempSourceConf% (
-        cp %_pathTempSourceConf% %cd%
+        xcopy %_pathTempSourceConf% %cd%
         set tpath=%cd%\!sourceTemp!
         if exist !tpath! (
             set rename=ren !sourceTemp! !sourceName!
@@ -197,7 +197,7 @@ for /d %%f in (%_pathLibrary%\*) do (
     )
     ::compile file .h
     for %%r in ("!_pathRoot!"\src\*.h) do (
-        set _copy=cp -r "%%r" %_pathBuildLib%
+        set _copy=copy "%%r" %_pathBuildLib%
         !_copy!
         echo copy %%~nxr %_pathBuildLib%
     )
