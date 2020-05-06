@@ -2,7 +2,6 @@ from os import path
 from pathlib import Path
 import os
 import sys
-import search_path as sp
 
 
 pathBackupInc= "tools\\etc\\backupInc.conf"
@@ -15,8 +14,7 @@ pathTempConf="tools\\etc\\temp.conf"
 pathIncludes = "inc\\"
 pathIncludesLib = "inc\\lib\\"
 pathOutput = "output\\"
-pathLibrary = "C:\\Users\\admin\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.4.0\\libraries"
-
+pathLibrary = ""
 folder="Arduino15"
 pathRoot="C:\\Users"
 
@@ -135,14 +133,16 @@ def process(source):
     if path.exists(pathTempConf):
         os.remove(pathTempConf)
 
-    for root, dirs, files in os.walk(pathRoot) :
-        if folder in dirs:
-            pathLibrary = path.join(root, folder)
-            break
-
-    pathLibrary = pathLibrary + "\\packages\\esp8266\\hardware\\esp8266\\2.4.0\\libraries"
-
-    print(pathLibrary)
+    file = open(pathPathFileConf, "r", encoding='utf-8')
+    index = 0
+    for line in file :
+        if line.find('\n') != -1 :
+            line = line.replace('\n', "")
+        if index == 0:
+            pathIncludes = line
+        else :
+            pathLibrary = line
+        index = index + 1
 
     search(source)
     searchPath()
@@ -162,6 +162,7 @@ def process(source):
             if not isExist(headerFullPathInc, searchCppFile(full)):
                 headerFullPathInc.append(searchCppFile(full))
 
+
     t_headerPath = []
     for full in headerPath:
         if (full.find(path.abspath(pathIncludesLib)) == -1) and ( full.find(pathLibrary) == -1 ):
@@ -180,7 +181,6 @@ def process(source):
                 temp = temp + ".o"
                 temp = Path(temp).name
                 temp = os.path.join(path.abspath(pathOutput), temp)
-                #writeFile(pathHeaderConf, temp + "\n")
         else :
             temp = header.replace(".h", ".cpp") + ".a"
             if path.exists(temp):

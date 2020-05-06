@@ -3,7 +3,7 @@ import os
 
 folder="Arduino15"
 pathRoot="C:\\Users"
-pathPathFileConf="tools\\etc\\path.conf"
+pathPathFileConf="tools\\etc\\pathArduino.conf"
 
 
 def writeFile(filename, data):

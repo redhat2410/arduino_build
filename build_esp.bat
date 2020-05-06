@@ -72,8 +72,8 @@ for %%f in (%_pathBuildLib%\*) do (
 set toolsPath=%_tools_search_path%
 !toolsPath!
 
-if exist %_pathPathFileConf% (
-    for /F "delims=" %%f in ('Type %_pathPathFileConf%') do (
+if exist %_pathArduinoConf% (
+    for /F "delims=" %%f in ('Type %_pathArduinoConf%') do (
         set tempPath=%%f
     )
     set _pathArduino=!tempPath!\packages\esp8266
@@ -82,7 +82,7 @@ if exist %_pathPathFileConf% (
 ) else (
     goto :UNSUCCESS
 )
-:DEFINE_PATH
+
 :: Macro path file
 set _pathCore=!_pathArduino!\hardware\esp8266\2.4.0\cores\esp8266
 set _pathTools=!_pathArduino!\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\bin
