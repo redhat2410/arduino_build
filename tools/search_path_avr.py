@@ -5,6 +5,7 @@ arduino = "arduino.exe"
 volume = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 drivers = ['%s:'% d for d in volume if os.path.exists('%s:' % d)]
+folders = ["Program Files (x86)", "Program Files"]
 
 isFind = False
 
@@ -23,13 +24,14 @@ def writeFile(filename, data):
 
 
 for driver in drivers:
-    for root, dirs, files in os.walk(str(driver) + "\\"):
-        if arduino in files:
-            root = '"' + root + '"'
-            writeFile(pathArduinoConf, root)
-            isFind = True
-            if isFind :
-                break
-    if isFind:
-        break
+    for folder in folders:
+        for root, dirs, files in os.walk(str(driver) + "\\" + folder):
+            if arduino in files:
+                root = '"' + root + '"'
+                writeFile(pathArduinoConf, root)
+                isFind = True
+                if isFind :
+                    break
+        if isFind:
+            break
 

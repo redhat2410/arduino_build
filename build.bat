@@ -70,28 +70,32 @@ for %%f in (%_pathBuildLib%\*) do (
 ::Kiểm tra file path.conf có tồn tại nếu tồn tại thì không cần hỏi đường dẫn arduino
 ::nếu file ko tồn tại thực hiện hỏi đường dẫn arduino và ghi lại file
 if not exist %_pathArduinoConf% (
-    ::hỏi đường dẫn Arduino
+    ::sử dụng tools để tìm đường dẫn Arduino
     set toolsSearch=%_tools_search_path%
     !toolsSearch!
-    for /F "delims=" %%f in ('Type "%_pathArduinoConf%"') do (
-        set _pathArduino=%%f
+    ::nếu tìm thấy đường dẫn sẽ được ghi vào file pathArduino.conf
+    if exist %_pathArduinoConf% (
+        for /F "delims=" %%f in ('Type "%_pathArduinoConf%"') do (
+            set _pathArduino=%%f
+        )
+        goto :DEFINE_PATH
+    ) else (
+        ::ngược lại nếu ko tìm thấy sẽ yêu cầu người dùng define đường dẫn bằng tay
+        set /P _pathArduino=Enter the path Arduino:
+        if exist !_pathArduino! (
+            echo !_pathArduino!>%_pathArduinoConf%
+            goto :DEFINE_PATH
+        ) else (
+            echo Arduino path is wrong.
+            goto :UNSUCCESS
+        )
     )
-    goto :DEFINE_PATH
-    REM set /P _pathArduino=Enter the path Arduino:
-    REM if exist !_pathArduino! (
-    REM     echo !_pathArduino!>%_pathArduinoConf%
-    REM     goto :DEFINE_PATH
-    REM ) else (
-    REM     goto :UNSUCCESS
-    REM )
 ) else (
     for /F "delims=" %%f in ('Type "%_pathArduinoConf%"') do (
         set _pathArduino=%%f
     )
     goto :DEFINE_PATH
 )
-
-
 
 :DEFINE_PATH
 echo Location !_pathArduino!
@@ -111,7 +115,7 @@ echo %_pathBuildInc%>>%_pathPathFileConf%
 set _compiler-gcc=avr-gcc
 set _compiler-g++=avr-g++
 ::set _compiler-static-library=avr-gcc-ar
-set _compiler-static-library=avr-ar
+set _compiler-static-library=avr-gcc-ar
 set _compiler-hex=avr-objcopy
 set _compiler-upload=avrdude
 :: Macro option for compiler
@@ -307,7 +311,7 @@ if exist %_pathBackupIncConf% (
             set build=%_compiler-gcc% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions -ffunction-sections -fdata-sections -fno-threadsafe-statics -Wno-error=narrowing -MMD -flto -mmcu=%_opt-mcu% -DF_CPU=%_opt-frq% -DARDUINO=10810 -I%_pathCore% -I%_pathVariant% -I%_pathBuildLib% -I"!root:~0,-1!" !pathLib! "!sourceInc!" -o "!outputInc!" 
             !build!
             echo build !sourceInc!
-            set slibrary=%_compiler-static-library% rcs "!staticInc!" "!outputInc!"
+            set slibrary=%_compiler-static-library% -crs "!staticInc!" "!outputInc!"
             !slibrary!
             echo build static library !outputInc!
             cd /d %_pathCurrent%
@@ -346,7 +350,7 @@ if exist %_pathSourceOut% (
 if exist !_pathSourceELF! (
     set buildHEX=%_compiler-hex% -j .text -j .data -O ihex "!_pathSourceELF!" "!_pathSourceHEX!"
     !buildHEX!
-    echo !buildHEX!
+    echo compile hex !_pathSourceELF!
 ) else (
     goto :UNSUCCESS
 )
