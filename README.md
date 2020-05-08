@@ -8,7 +8,7 @@ Trình biên dịch được sử dụng cho các dòng vi điều khiển AVR v
 - Sao chép thư mục **tools, build.bat và build_esp.bat** vào thư mục chứa dự án.
 - Chạy tập tin **build.bat** cho các dự án thực hiện trên dòng **arduino AVR (arduino Uno, Nano, pro mini)**.
 - Chạy tập tin **build_esp.bat** cho các dự án thực hiện trên dòng **ESP8266-v01, ESP8266-v07, ESP8266-v12**.
-Để chạy tập tin **.bat** phải chạy bằng termial CMD của Windows
+Để chạy tập tin **.bat** phải chạy bằng cửa sổ CMD (Command Prompt) của Windows
 ![](.img/cmd.jpg)
 ```bash
 > cd new_project
