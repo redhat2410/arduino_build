@@ -46,7 +46,7 @@ Sao khi chạy các file .bat thì bố cục trong thư mục dự án sẽ có
 **Khi sử dụng trình biên dịch cho vi điều khiển AVR thì bạn cần phải lưu ý các điểm sau:**
 - Bắt buộc phải cài đặt Arduino IDE ( Link download: https://www.arduino.cc/en/Main/Software ).
 - Khi chạy tập tin build.bat có thể được hỏi phải cung cấp cho trình biên dịch đường dẫn cài đặt của Arduino IDE ( chỉ cần cung cấp 1 lần cho mỗi dự án ).
-- Trình biên dịch sẽ hỏi biên dịch cho dòng arduino nào
+- Trình biên dịch sẽ hỏi bạn biên dịch cho dòng Arduino nào.
 ![](.img/arduino.jpg)
 - Trong quá trình biên dịch, trình biên dịch sẽ hỏi bạn "Do you want to upload (Y/N)", bạn trả lời "Y" khi muốn nạp chương trình cho vi điều khiển, ngược lại "N" khi bạn chỉ muốn build chương trình.
 - Sau khi đồng ý chọn nạp chương trình, trình biên dịch sẽ hỏi bạn nạp với cổng COM nào "Enter port name:"
@@ -58,6 +58,8 @@ Sao khi chạy các file .bat thì bố cục trong thư mục dự án sẽ có
 - Cài đặt thư viện ESP8266 với phiên bản **2.4.0** (cài đặt phiên bản thư viện bằng cách vào *Tools->Board->Board Manager*:
 ![](.img/esp.jpg)
 - Trong quá trình biên dịch, trình biên dịch sẽ hỏi bạn "Do you want to upload (Y/N)", bạn trả lời "Y" khi muốn nạp chương trình cho vi điều khiển, ngược lại "N" khi bạn chỉ muốn build chương trình.
+- Sau khi đồng ý chọn nạp chương trình, trình biên dịch sẽ hỏi bạn nạp với cổng COM nào "Enter port name:"
+![](.img/com.jpg)
 
 **Lưu ý:**
 **Các mã nguồn được đặt trong thư mục "inc\" (thư mục đặt thư viện cho người dùng tự định nghĩa) sẽ được biên dịch sang tập tin thư viện tĩnh (.a) vì vậy sau khi biên dịch các bạn có thể xóa tập tinh .c hoặc .cpp đễ bảo vệ mã nguồn.**
