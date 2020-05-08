@@ -140,9 +140,9 @@ def process(source):
             temp = searchCppFile(header) + ".o"
             temp = Path(temp).name
             temp = os.path.join(path.abspath(pathOutput), temp)
-            #writeFile(pathHeaderConf, temp + "\n")
         else :
             temp = header.replace(".h", ".cpp") + ".a"
+            print(temp)
             if path.exists(temp):
                 writeFile(pathHeaderConf, temp + "\n")
             else:

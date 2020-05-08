@@ -83,6 +83,7 @@ if exist %_pathArduinoConf% (
     goto :UNSUCCESS
 )
 
+set _pathRoot=!_pathArduino!\hardware\esp8266\2.4.0
 :: Macro path file
 set _pathCore=!_pathArduino!\hardware\esp8266\2.4.0\cores\esp8266
 set _pathTools=!_pathArduino!\tools\xtensa-lx106-elf-gcc\1.20.0-26-gb404fb9-2\bin
@@ -110,6 +111,10 @@ set _compiler-static-library=xtensa-lx106-elf-ar
 set _compiler-hex=xtensa-lx106-elf-objcopy
 set _compiler-upload=%_pathArduino%\tools\esptool\0.4.12\esptool
 
+if not exist %_pathRoot% (
+    echo Please install library esp8266 version 2.4.0
+    goto :UNSUCCESS
+)
 
 cd /d %_pathTools%
 for %%f in (%_pathCore%\*.s) do (

@@ -331,17 +331,22 @@ set compile=%_compiler-g++% -c -g -Os -w -std=gnu11 -fpermissive -fno-exceptions
 !compile!
 echo build %_pathSourceFile%
 
+if exist %_pathHeaderFileConf% (
+    for /F "delims=" %%f in ('Type "%_pathHeaderFileConf%"') do (
+        echo %%f>>%_pathStaticConf%
+    )
+)
+
 if exist %_pathStaticConf% (
     for /F "delims= tokens=1*" %%f in ('Type "%_pathStaticConf%"') do (
-        set staticLink="%%f" !staticLink!
+        set staticLink=!staticLink! "%%f"
     )
 )
 
 if exist %_pathSourceOut% (
     ::set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" !staticLink!%_pathStaticLibraryLib% %_pathStaticLibraryCore%
-    set buildELF=%_compiler-gcc% -w -Os -g -flto -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" !staticLink!%_pathStaticLibraryLib% %_pathStaticLibraryCore%
+    set buildELF=%_compiler-gcc% -w -Os -g -flto -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!"!staticLink! %_pathStaticLibraryLib% %_pathStaticLibraryCore%
     !buildELF!
-    ::echo !buildELF!
     echo compile !_pathSourceOut!
 ) else (
     goto :UNSUCCESS
