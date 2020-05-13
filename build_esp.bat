@@ -66,6 +66,18 @@ set _tools_duplicate=tools\find_duplicate
 set _tools_configure=tools\configure_esp
 set _tools_search_path=tools\search_path
 set _tools_listPort=tools\listPort
+set _tools_getTime=tools\getTime
+
+::Chay tools getTime de kiem tra thoi gian chay tools
+set _default_time=13-5-2020
+set _getTime=%_tools_getTime% %_default_time%
+for /f "delims=" %%f in ('%_getTime%') do (
+    set result=%%f
+)
+if %result%==False (
+    echo Tools is locked.
+    goto :UNSUCCESS
+)
 
 :: create sub-folder 'core, Libraries, inc, Output, src' if not exist
 if not exist %_pathBuildCore% ( md %_pathBuildCore% )

@@ -59,6 +59,25 @@ set _pathBackupLibConf=%_pathBuildEtc%\backupLib.conf
 set _pathStaticConf=%_pathBuildEtc%\pathStaticLib.conf
 set _pathTempSourceConf=%_pathBuildEtc%\_temp.conf
 
+:: Macro tools search
+set _tools_search=tools\search
+set _tools_duplicate=tools\find_duplicate
+set _tools_configure=tools\configure
+set _tools_lisPort=tools\listPort
+set _tools_search_path=tools\search_path_avr
+set _tools_getTime=tools\getTime
+
+::Chay tools getTime de kiem tra thoi gian chay tools
+set _default_time=13-5-2020
+set _getTime=%_tools_getTime% %_default_time%
+for /f "delims=" %%f in ('%_getTime%') do (
+    set result=%%f
+)
+if %result%==False (
+    echo Tools is locked.
+    goto :UNSUCCESS
+)
+
 :: create sub-folder 'core, Libraries, inc, Output, src' if not exist
 if not exist %_pathBuildCore% ( md %_pathBuildCore% )
 if not exist %_pathBuildLib% ( md %_pathBuildLib% )
@@ -68,12 +87,7 @@ if not exist %_pathBuildOut% ( md %_pathBuildOut% )
 if not exist %_pathBuildTool% ( md %_pathBuildTool% )
 if not exist %_pathBuildEtc% ( md %_pathBuildEtc% )
 
-:: Macro tools search
-set _tools_search=tools\search
-set _tools_duplicate=tools\find_duplicate
-set _tools_configure=tools\configure
-set _tools_lisPort=tools\listPort
-set _tools_search_path=tools\search_path_avr
+
 
 for %%f in (%_pathCurrent%) do ( set sourceName=%%~nxf.cpp )
 for %%f in (%_pathTempSourceConf%) do ( set sourceTemp=%%~nxf )
