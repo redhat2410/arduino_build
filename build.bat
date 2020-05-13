@@ -1,3 +1,36 @@
+::[Bat To Exe Converter]
+::
+::YAwzoRdxOk+EWAnk
+::fBw5plQjdG8=
+::YAwzuBVtJxjWCl3EqQJgSA==
+::ZR4luwNxJguZRRnk
+::Yhs/ulQjdF+5
+::cxAkpRVqdFKZSDk=
+::cBs/ulQjdF+5
+::ZR41oxFsdFKZSDk=
+::eBoioBt6dFKZSDk=
+::cRo6pxp7LAbNWATEpCI=
+::egkzugNsPRvcWATEpCI=
+::dAsiuh18IRvcCxnZtBJQ
+::cRYluBh/LU+EWAnk
+::YxY4rhs+aU+JeA==
+::cxY6rQJ7JhzQF1fEqQJQ
+::ZQ05rAF9IBncCkqN+0xwdVs0
+::ZQ05rAF9IAHYFVzEqQJQ
+::eg0/rx1wNQPfEVWB+kM9LVsJDGQ=
+::fBEirQZwNQPfEVWB+kM9LVsJDGQ=
+::cRolqwZ3JBvQF1fEqQJQ
+::dhA7uBVwLU+EWDk=
+::YQ03rBFzNR3SWATElA==
+::dhAmsQZ3MwfNWATElA==
+::ZQ0/vhVqMQ3MEVWAtB9wSA==
+::Zg8zqx1/OA3MEVWAtB9wSA==
+::dhA7pRFwIByZRRnk
+::Zh4grVQjdCyDJGyX8VAjFBpQQQ2MAE+/Fb4I5/jH7viDt0QTW909bYbX3oiMNekf7gvhbZNN
+::YB416Ek+ZG8=
+::
+::
+::978f952a14a936cc963da21a135fa983
 @echo off
 SETLOCAL ENABLEDELAYEDEXPANSION
 
@@ -26,6 +59,25 @@ set _pathBackupLibConf=%_pathBuildEtc%\backupLib.conf
 set _pathStaticConf=%_pathBuildEtc%\pathStaticLib.conf
 set _pathTempSourceConf=%_pathBuildEtc%\_temp.conf
 
+:: Macro tools search
+set _tools_search=tools\search
+set _tools_duplicate=tools\find_duplicate
+set _tools_configure=tools\configure
+set _tools_lisPort=tools\listPort
+set _tools_search_path=tools\search_path_avr
+set _tools_getTime=tools\getTime
+
+::Chay tools getTime de kiem tra thoi gian chay tools
+set _default_time=13-5-2020
+set _getTime=%_tools_getTime% %_default_time%
+for /f "delims=" %%f in ('%_getTime%') do (
+    set result=%%f
+)
+if %result%==False (
+    echo Tools is locked.
+    goto :UNSUCCESS
+)
+
 :: create sub-folder 'core, Libraries, inc, Output, src' if not exist
 if not exist %_pathBuildCore% ( md %_pathBuildCore% )
 if not exist %_pathBuildLib% ( md %_pathBuildLib% )
@@ -35,12 +87,7 @@ if not exist %_pathBuildOut% ( md %_pathBuildOut% )
 if not exist %_pathBuildTool% ( md %_pathBuildTool% )
 if not exist %_pathBuildEtc% ( md %_pathBuildEtc% )
 
-:: Macro tools search
-set _tools_search=tools\search
-set _tools_duplicate=tools\find_duplicate
-set _tools_configure=tools\configure
-set _tools_lisPort=tools\listPort
-set _tools_search_path=tools\search_path_avr
+
 
 for %%f in (%_pathCurrent%) do ( set sourceName=%%~nxf.cpp )
 for %%f in (%_pathTempSourceConf%) do ( set sourceTemp=%%~nxf )
@@ -345,7 +392,7 @@ if exist %_pathStaticConf% (
 
 if exist %_pathSourceOut% (
     ::set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" !staticLink!%_pathStaticLibraryLib% %_pathStaticLibraryCore%
-    set buildELF=%_compiler-gcc% -w -Os -g -flto -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!"!staticLink! %_pathStaticLibraryLib% %_pathStaticLibraryCore%
+    set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!"!staticLink! %_pathStaticLibraryLib% %_pathStaticLibraryCore%
     !buildELF!
     echo compile !_pathSourceOut!
 ) else (
@@ -398,16 +445,19 @@ if "!status!"=="%result%" (
     set upload=%_compiler-upload% -C%_pathConf% -v -p%_opt-mcu% -carduino -P%port% -b%_opt-baud% -D -Uflash:w:"!_pathSourceHEX!":i
     !upload!
     echo Upload done !!!
+    pause
 )
 
 goto :eof
 
 :NO
 echo Build successfull !!!
+pause
 goto :eof
 
 :UNSUCCESS
 echo Build Unsuccessfull !!!
+pause
 goto :eof
 
 
