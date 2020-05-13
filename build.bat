@@ -392,7 +392,7 @@ if exist %_pathStaticConf% (
 
 if exist %_pathSourceOut% (
     ::set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!" !staticLink!%_pathStaticLibraryLib% %_pathStaticLibraryCore%
-    set buildELF=%_compiler-gcc% -w -Os -g -flto -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!"!staticLink! %_pathStaticLibraryLib% %_pathStaticLibraryCore%
+    set buildELF=%_compiler-gcc% -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -mmcu=%_opt-mcu% -o "!_pathSourceELF!" "!_pathSourceOut!"!staticLink! %_pathStaticLibraryLib% %_pathStaticLibraryCore%
     !buildELF!
     echo compile !_pathSourceOut!
 ) else (
