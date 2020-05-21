@@ -1,7 +1,13 @@
 import serial
 
-ser = serial.Serial('COM3', 9600)
+port = input("Enter port name: ")
+baud = input("Enter baudrate : ")
 
-while 1:
-    data = ser.read()
-    print(data)
+try:
+    ser = serial.Serial(port, baud)
+
+    while 1:
+        data = ser.read()
+        print(data)
+except:
+    print("An exception occurred")
