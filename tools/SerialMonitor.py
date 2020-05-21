@@ -9,7 +9,7 @@ ser = serial.Serial(port, baud, timeout=1)
 
 while True:
     try:
-        data = ser.read().decode('ascii')
+        data = ser.readline().decode('ascii')
     except:
         sys.exit()
     if data != "":
