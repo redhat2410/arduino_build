@@ -55,10 +55,14 @@ def search(source):
                 else:
                     result = line.split('"')
                     result = result[1].split('"')
+                result = result[0]
+                if result.find('/') != -1:
+                    result = result.split('/')
+                    result = result[1]
                 #ignore header special
-                if (result[0] != word_1) and (result[0] != word_2) and (result[0] != word_3) and (result[0] != word_4) and (result[0] != word_5) and (result[0] != word_6) and (result[0] != word_7) :
-                    if not isExist(headerNameInc, result[0]):
-                        headerNameInc.append(result[0])
+                if (result != word_1) and (result != word_2) and (result != word_3) and (result != word_4) and (result != word_5) and (result != word_6) and (result != word_7) :
+                    if not isExist(headerNameInc, result):
+                        headerNameInc.append(result)
         file.close()
     else:
         print("Error source file is not exist.")
@@ -126,14 +130,17 @@ def process(source):
 
     for full in headerFullPath:
         if full.find( path.abspath(pathIncludesLib) ) != -1:
-            headerFullPathLib.append(path.dirname(full))
+            if not isExist(headerFullPathLib, path.dirname(full)):
+                headerFullPathLib.append(path.dirname(full))
         else:
-            headerFullPathInc.append(searchCppFile(full))
+            if not isExist(headerFullPathInc, searchCppFile(full)):
+                headerFullPathInc.append(searchCppFile(full))
 
     t_headerPath = []
     for full in headerPath:
         if full.find(path.abspath(pathIncludesLib)) == -1:
-            t_headerPath.append(full)
+            if not isExist(t_headerPath, full):
+                t_headerPath.append(full)
 
     for header in headerFullPath:
         if header.find( path.abspath(pathIncludesLib) ) != -1:
