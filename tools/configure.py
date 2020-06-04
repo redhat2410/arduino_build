@@ -120,13 +120,18 @@ def process(source):
 
     search(source)
     searchPath()
-
-    for full in headerFullPath:
-        search(full)
-        pathsrc = searchCppFile(full)
-        if pathsrc != "" :
-            search(pathsrc)
-    searchPath()
+    isBreak = False
+    while not(isBreak):
+        for full in headerFullPath:
+            search(full)
+            pathsrc = searchCppFile(full)
+            if pathsrc != "" :
+                search(pathsrc)
+            else:
+                isBreak = True
+        searchPath()
+        if len(headerFullPath) == 0:
+            break
 
     for full in headerFullPath:
         if full.find( path.abspath(pathIncludesLib) ) != -1:

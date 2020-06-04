@@ -165,6 +165,7 @@ set _compiler-g++=avr-g++
 set _compiler-static-library=avr-gcc-ar
 set _compiler-hex=avr-objcopy
 set _compiler-upload=avrdude
+set _compiler-size=avr-size
 :: Macro option for compiler
 set _opt-mcu-328=atmega328p
 set _opt-frq-16M=16000000L
@@ -296,6 +297,7 @@ for %%f in (%_pathCurrent%\*.cpp) do (
     set _pathSourceOut=%_pathBuildOut%\%%~nxf.o
     set _pathSourceELF=%_pathBuildOut%\%%~nxf.elf
     set _pathSourceHEX=%_pathBuildOut%\%%~nxf.hex
+    set _pathSourceEEP=%_pathBuildOut%\%%~nxf.eep
 )
 
 ::thực hiện search header trong file .cpp
@@ -400,9 +402,15 @@ if exist %_pathSourceOut% (
 )
 ::Convert file hex to file .elf
 if exist !_pathSourceELF! (
-    set buildHEX=%_compiler-hex% -j .text -j .data -O ihex "!_pathSourceELF!" "!_pathSourceHEX!"
+    set buildEEP=%_compiler-hex% -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0 "!_pathSourceELF!" "!_pathSourceEEP!"
+    !buildEEP!
+    echo compile hex !_pathSourceEEP!
+    set buildHEX=%_compiler-hex% -O ihex -R .eeprom "!_pathSourceELF!" "!_pathSourceHEX!"
     !buildHEX!
     echo compile hex !_pathSourceELF!
+    set buildSIZ=%_compiler-size% -A "!_pathSourceELF!"
+    !buildSIZ!
+    echo calculate size.
 ) else (
     goto :UNSUCCESS
 )

@@ -57,10 +57,15 @@ def search(source):
                 else:
                     result = line.split('"')
                     result = result[1].split('"')
+                result = result[0]
+                if result.find('/') != -1:
+                    result = result.split('/')
+                    result = result[1]
                 #ignore header special
-                if (result[0] != word_1) and (result[0] != word_7) :
-                    if not isExist(headerNameInc, result[0]):
-                        headerNameInc.append(result[0])
+                if (result != word_1) and (result != word_7) :
+                    if not isExist(headerNameInc, result):
+                        headerNameInc.append(result)
+                        print(result)
         file.close()
     else:
         print("Error source file is not exist.")
@@ -84,7 +89,7 @@ def searchPath():
     else:
         print("Error configure file is not exist.")
         return 
-
+    isAppeared = False
     if len(headerNameInc) > 0:
         for pathlib in pathLibrary:
             for name in headerNameInc:
@@ -146,13 +151,17 @@ def process(source):
 
     search(source)
     searchPath()
+    isBreak = False
 
-    for full in headerFullPath:
-        search(full)
-        pathsrc = searchCppFile(full)
-        if pathsrc != "" :
-            search(pathsrc)
-    searchPath()
+    while not(isBreak):
+        for full in headerFullPath:
+            search(full)
+            pathsrc = searchCppFile(full)
+            if pathsrc != "" :
+                search(pathsrc)
+            else:
+                isBreak = True
+        searchPath()
 
     for full in headerFullPath:
         if (full.find( path.abspath(pathIncludesLib) ) != -1) or ( full.find(pathLibrary) != -1 ):
