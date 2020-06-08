@@ -33,6 +33,15 @@ def isExist(List, find):
             break
     return exist
 
+def isExistName(List, name):
+    # print(name)
+    exist = False
+    for l in List:
+        if l.find(name) > 0:
+            exist = True
+            break
+    return exist
+
 # Hàm search sẽ tìm kiếm tất cả các file header có liên qua tới file source
 # @param source: file nguồn 
 # @param none
@@ -65,7 +74,6 @@ def search(source):
                 if (result != word_1) and (result != word_7) :
                     if not isExist(headerNameInc, result):
                         headerNameInc.append(result)
-                        print(result)
         file.close()
     else:
         print("Error source file is not exist.")
@@ -89,16 +97,20 @@ def searchPath():
     else:
         print("Error configure file is not exist.")
         return 
-    isAppeared = False
+
     if len(headerNameInc) > 0:
         for pathlib in pathLibrary:
             for name in headerNameInc:
                 for root, dirs, file in os.walk(path.abspath(pathlib)):
                     if name in file:
-                        if not isExist(headerFullPath, os.path.join(root, name)):
-                            headerFullPath.append(os.path.join(root, name))
-                        if not isExist(headerPath, root):
-                            headerPath.append(root)
+                        # print(os.path.join(root, name))
+                        if isExistName(headerFullPath, name):
+                            continue
+                        else:
+                            if not isExist(headerFullPath, os.path.join(root, name)):
+                                headerFullPath.append(os.path.join(root, name))
+                            if not isExist(headerPath, root):
+                                headerPath.append(root)
 # Hàm searchCppFile thực hiện tìm file .cpp từ file header
 # @param source: đường dẫn file header
 # @return:  đường dẫn file source
@@ -154,6 +166,8 @@ def process(source):
     isBreak = False
 
     while not(isBreak):
+        if len(headerFullPath) == 0:
+            break
         for full in headerFullPath:
             search(full)
             pathsrc = searchCppFile(full)

@@ -262,6 +262,7 @@ if exist %_pathBackupLibConf% (
             echo !outputLib!>>%_pathStaticConf%
             cd /d %_pathTools%
             set build=%_compiler-gcc% -D__ets__ -DICACHE_FLASH -U__STRICT_ANSI__ -I%_pathSDKInc% -I%_pathSDKlwip2% -I%_pathSDKlibc% -c -w -Os -g -Wpointer-arith -Wno-implicit-function-declaration -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -falign-functions=4 -MMD -std=gnu99 -ffunction-sections -fdata-sections -DF_CPU=80000000L -DLWIP_OPEN_SRC -DTCP_MSS=536 -DARDUINO=10810 -DARDUINO_ESP8266_GENERIC -DARDUINO_ARCH_ESP8266 "-DARDUINO_BOARD=\"ESP8266_GENERIC\"" -DESP8266 -I%_pathCore% -I%_pathVariant% !pathlibraries! -I"!root!" "!sourceLib!" -o "!outputLib!"
+            !build!
             echo build !sourceLib!
             cd /d %_pathCurrent%
         )
