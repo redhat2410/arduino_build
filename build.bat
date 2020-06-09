@@ -408,7 +408,7 @@ if exist !_pathSourceELF! (
     set buildHEX=%_compiler-hex% -O ihex -R .eeprom "!_pathSourceELF!" "!_pathSourceHEX!"
     !buildHEX!
     echo compile hex !_pathSourceELF!
-    set buildSIZ=%_compiler-size% -A "!_pathSourceELF!"
+    set buildSIZ=%_compiler-size% -C --mcu=%_opt-mcu-328% "!_pathSourceELF!"
     !buildSIZ!
     echo calculate size.
 ) else (
@@ -428,7 +428,11 @@ if %ask%==Y (
     ::call file checkPort để nhập com port
     goto :YES
 ) else (
-    goto :NO
+    if %ask%==y (
+        goto :YES
+    ) else (
+        goto :NO
+    )
 )
 goto :eof
 

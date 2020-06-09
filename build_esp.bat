@@ -154,6 +154,7 @@ set _compiler-gcc=xtensa-lx106-elf-gcc
 set _compiler-g++=xtensa-lx106-elf-g++
 set _compiler-static-library=xtensa-lx106-elf-ar
 set _compiler-hex=xtensa-lx106-elf-objcopy
+set _compiler-size=xtensa-lx106-elf-size
 set _compiler-upload=%_pathArduino%\tools\esptool\0.4.12\esptool
 
 if not exist %_pathRoot% (
@@ -327,6 +328,9 @@ if exist !_pathSourceOut! (
     set buildELF=%_compiler-gcc% -g -w -Os -nostdlib -Wl,--no-check-sections -u call_user_start -u _printf_float -u _scanf_float -Wl,-static -L%_pathSDKlib% -L%_pathSDKld% -L%_pathSDKelflib% -Teagle.flash.1m64.ld -Wl,--gc-sections -Wl,-wrap,system_restart_local -Wl,-wrap,spi_flash_read -o "!_pathSourceELF!" -Wl,--start-group "!_pathSourceOut!" !staticLink!%_pathStaticLibraryCore% -lhal -lphy -lpp -lnet80211 -llwip2 -lwpa -lcrypto -lmain -lwps -laxtls -lespnow -lsmartconfig -lairkiss -lmesh -lwpa2 -lstdc++ -lm -lc -lgcc -Wl,--end-group
     !buildELF!
     echo compile !_pathSourceELF!
+    set calcSize=%_compiler-size% -B -t !_pathSourceELF!
+    !calcSize!
+    echo calculate size.
 ) else (
     goto :UNSUCCESS
 )
@@ -349,7 +353,11 @@ set /p ask=Do you want to upload (Y/N):
 if %ask%==Y (
     goto :YES
 ) else (
-    goto :NO
+    if %ask%==y (
+        goto :YES
+    ) else (
+        goto :NO
+    )
 )
 
 :YES
